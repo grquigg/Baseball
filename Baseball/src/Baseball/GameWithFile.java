@@ -68,76 +68,31 @@ public class GameWithFile
             TeamAIndex = reader.nextInt();
             teamA = new Team(workbook.getSheetAt(TeamAIndex).getSheetName(), TeamAIndex);
             XSSFSheet teamASheet = workbook.getSheetAt(TeamAIndex);
-            Unpack_data(teamA, teamASheet);
+            Unpack_data(teamA, teamASheet, indexSplitA);
             
             int TeamBIndex;
             System.out.println("Which team would you like to have as Team 2?");
             TeamBIndex = reader.nextInt();
             teamB = new Team(workbook.getSheetAt(TeamBIndex).getSheetName(), TeamBIndex);
             XSSFSheet teamBSheet = workbook.getSheetAt(TeamBIndex);
-            Unpack_data(teamB, teamBSheet);
+            Unpack_data(teamB, teamBSheet, indexSplitB);
             System.out.println("Teams have been set");
         }
-    }
-//            rowIterator = teamBSheet.iterator();
-//            int indexSplitB = 0;
-//            int playerIndexB = 0;
-//            int pitcherIndexB = 0;
-//            int rowidB = 0;
-//            XSSFRow rowTwo;
-//            boolean fin = false;
-//            while (rowIterator.hasNext())
-//            {
-//                rowTwo = (XSSFRow) rowIterator.next();
-//                if (rowidB != 0)
-//                {
-//                    if (rowTwo.getCell(0).getCellType() != CellType.BLANK && indexSplitB == 0)
-//                    {
-//                        teamB.addPlayer(rowTwo.getCell(0).getStringCellValue(), "Blank");
-//                        for (int j = 1; j < 12; j++)
-//                        {
-//                            int num = (int) rowTwo.getCell(j).getNumericCellValue();
-//                            teamB.getPlayer(playerIndexB).setStat(j-1, num);
-//                        }
-//                        teamB.useStats(teamB.getPlayer(playerIndexB));
-//                        playerIndexB++;
-//                    }
-//                        else if (rowTwo.getCell(0).getCellType() == CellType.BLANK)
-//                        {
-//                            indexSplitB = rowidB;
-//                        }
-//                        if (indexSplitB != 0)
-//                        {
-//                            if (fin == true)
-//                            {
-//                                teamB.addToRotation(new Pitcher(rowTwo.getCell(0).getStringCellValue(), "Pitcher"));
-//                                for (int k = 1; k < 12; k++)
-//                                {
-//                                    int numeral = (int) rowTwo.getCell(k).getNumericCellValue();
-//                                    teamB.getPitcher(pitcherIndexB).setPitchStat(k - 1, numeral);
-//                                }
-//                                pitcherIndexB++;
-//                            }
-//                            else
-//                                fin = true;
-//                            }
-//                        }
-//                rowidB++;
-//            }
-                 
+    }                
 
-	private void Unpack_data(Team team, XSSFSheet sheet) {
+	private void Unpack_data(Team team, XSSFSheet sheet, int split) {
 		// TODO Auto-generated method stub
         Iterator < Row > rowIterator = sheet.iterator();
-        int pitcherIndexA = 0;
+        int pitcherIndex = 0;
         int playerIndex = 0;
-        int rowidA = 0;
+        int rowid = 0;
+        split = 0;
         boolean end = false;
         XSSFRow newRow;
         while (rowIterator.hasNext()) //iterates through each row in the excel spreadsheet
         {
             newRow = (XSSFRow) rowIterator.next(); //new row equals next
-            if (rowidA != 0)
+            if (rowid != 0)
             {
             	//indexSplit seems to be redundant. I'm not 100% about the documentation for the XSSFSpreadsheet, but we could write something
             	/*more along the lines of this:
@@ -158,32 +113,34 @@ public class GameWithFile
             	 * they encounter a blank row. 
             	 * 
             	 */
-                if (newRow.getCell(0).getCellType() != CellType.BLANK && indexSplitA == 0)
+                if (newRow.getCell(0).getCellType() != CellType.BLANK && split == 0)
                 {
-                    teamA.addPlayer(newRow.getCell(0).getStringCellValue(), "Batter"); //if position is irrelevant, then why include it in the first place?
+                    team.addPlayer(newRow.getCell(0).getStringCellValue(), "Batter"); //if position is irrelevant, then why include it in the first place?
                     for (int j = 1; j < 12; j++)
                     {
                         int num = (int) newRow.getCell(j).getNumericCellValue();
-                        teamA.getPlayer(playerIndex).setStat(j-1, num);
+                        //System.out.println(num);
+                        team.getPlayer(playerIndex).setStat(j-1, num);
                     }
-                    teamA.useStats(teamA.getPlayer(playerIndex)); //i don't know what this does
+                    team.useStats(team.getPlayer(playerIndex)); //i don't know what this does
                     playerIndex++;
                 }
                     else if (newRow.getCell(0).getCellType() == CellType.BLANK)
                     {
-                        indexSplitA = rowidA;
+                        split = rowid;
                     }
-                if (indexSplitA != 0)
+                if (split != 0)
                 {
                     if (end == true)
                     {
-                        teamA.addToRotation(new Pitcher(newRow.getCell(0).getStringCellValue(), "Pitcher"));
-                        for (int k = 1; k < 12; k++)
+                        team.addToRotation(new Pitcher(newRow.getCell(0).getStringCellValue(), "Pitcher"));
+                        for (int k = 1; k < 11; k++)
                         {
                             int numeral = (int) newRow.getCell(k).getNumericCellValue();
-                            teamA.getPitcher(pitcherIndexA).setPitchStat(k - 1, numeral);
+                            //System.out.println(numeral);
+                            team.getPitcher(pitcherIndex).setPitchStat(k - 1, numeral);
                         }
-                        pitcherIndexA++;
+                        pitcherIndex++;
                             
                     }
                         else
@@ -192,7 +149,7 @@ public class GameWithFile
                         }
                 }
             }
-            rowidA++;
+            rowid++;
         }
 	}
 	
