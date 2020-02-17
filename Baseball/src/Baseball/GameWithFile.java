@@ -80,6 +80,25 @@ public class GameWithFile
         }
     }                
 
+	//indexSplit seems to be redundant. I'm not 100% about the documentation for the XSSFSpreadsheet, but we could write something
+	/*more along the lines of this:
+	 * while (the first cell in the new row is not blank) {
+	 * 		call the method to have the program read data from the spreadsheet and store it in the player's values
+	 * }
+	 * row = next row
+	 * while (the first cell in the new row is not blank) {
+	 * 		call the method to have the program read data from the spreadsheet and store it
+	 * }
+	 * 
+	 * Writing the code like this makes life easier for two reasons. The first is that it's a step forward in the right direction of getting a 
+	 * generic XSSFRow reader that simply given the contents of a row and an index turns that data into an array and returns it. This is extremely useful in the type of data analysis
+	 * projects that are the crux of your foundation as a programmer. 
+	 * 
+	 * The second reason that we want to do this is to get rid of rather repetitive and redundant code that makes things feel clunky and rather poorly thought out.
+	 * The code called in the first half of the for loop and the code in the second for loop essentially do the exact same thing in that they read data from a file until 
+	 * they encounter a blank row. 
+	 * 
+	 */
 	private void Unpack_data(Team team, XSSFSheet sheet, int split) {
 		// TODO Auto-generated method stub
         Iterator < Row > rowIterator = sheet.iterator();
@@ -89,79 +108,82 @@ public class GameWithFile
         split = 0;
         boolean end = false;
         XSSFRow newRow;
+        newRow = (XSSFRow) rowIterator.next(); //skips over the line of headers
+        //code has been split up into two while loop blocks; the first reads the data of the batters, while the second reads the data of the pitchers
         while (rowIterator.hasNext()) //iterates through each row in the excel spreadsheet
         {
+        	System.out.println("Beginning of the first while loop");
             newRow = (XSSFRow) rowIterator.next(); //new row equals next
-            if (rowid != 0)
+            System.out.println(newRow.getRowNum());
+            if (newRow.getCell(0).getCellType() != CellType.BLANK)
             {
-            	//indexSplit seems to be redundant. I'm not 100% about the documentation for the XSSFSpreadsheet, but we could write something
-            	/*more along the lines of this:
-            	 * while (the first cell in the new row is not blank) {
-            	 * 		call the method to have the program read data from the spreadsheet and store it in the player's values
-            	 * }
-            	 * row = next row
-            	 * while (the first cell in the new row is not blank) {
-            	 * 		call the method to have the program read data from the spreadsheet and store it
-            	 * }
-            	 * 
-            	 * Writing the code like this makes life easier for two reasons. The first is that it's a step forward in the right direction of getting a 
-            	 * generic XSSFRow reader that simply given the contents of a row and an index turns that data into an array and returns it. This is extremely useful in the type of data analysis
-            	 * projects that are the crux of your foundation as a programmer. 
-            	 * 
-            	 * The second reason that we want to do this is to get rid of rather repetitive and redundant code that makes things feel clunky and rather poorly thought out.
-            	 * The code called in the first half of the for loop and the code in the second for loop essentially do the exact same thing in that they read data from a file until 
-            	 * they encounter a blank row. 
-            	 * 
-            	 */
-                if (newRow.getCell(0).getCellType() != CellType.BLANK && split == 0)
+            	team.addPlayer(newRow.getCell(0).getStringCellValue(), "Batter"); //if position is irrelevant, then why include it in the first place?
+                for (int j = 1; j < 12; j++)
                 {
-                    team.addPlayer(newRow.getCell(0).getStringCellValue(), "Batter"); //if position is irrelevant, then why include it in the first place?
-                    for (int j = 1; j < 12; j++)
-                    {
-                        int num = (int) newRow.getCell(j).getNumericCellValue();
-                        //System.out.println(num);
-                        team.getPlayer(playerIndex).setStat(j-1, num);
-                    }
-                    team.useStats(team.getPlayer(playerIndex)); //i don't know what this does
-                    playerIndex++;
+                    int num = (int) newRow.getCell(j).getNumericCellValue();
+                    //System.out.println(num);
+                    team.getPlayer(playerIndex).setStat(j-1, num);
                 }
-                    else if (newRow.getCell(0).getCellType() == CellType.BLANK)
-                    {
-                        split = rowid;
-                    }
-                if (split != 0)
-                {
-                    if (end == true)
-                    {
-                        team.addToRotation(new Pitcher(newRow.getCell(0).getStringCellValue(), "Pitcher"));
-                        for (int k = 1; k < 11; k++)
-                        {
-                            int numeral = (int) newRow.getCell(k).getNumericCellValue();
-                            //System.out.println(numeral);
-                            team.getPitcher(pitcherIndex).setPitchStat(k - 1, numeral);
-                        }
-                        pitcherIndex++;
-                            
-                    }
-                        else
-                        {
-                            end = true;
-                        }
-                }
+                team.useStats(team.getPlayer(playerIndex)); //i don't know what this does
+                playerIndex++;
             }
-            rowid++;
+            else if (newRow.getCell(0).getCellType() == CellType.BLANK)
+            {
+            	break;
+            }
+        }
+        while (rowIterator.hasNext()) {
+        	System.out.println("Beginning of the second while loop");
+        	newRow = (XSSFRow) rowIterator.next();
+        	team.addToRotation(new Pitcher(newRow.getCell(0).getStringCellValue(), "Pitcher"));
+            for (int k = 1; k < 11; k++)
+            {
+                int numeral = (int) newRow.getCell(k).getNumericCellValue();
+                    //System.out.println(numeral);
+                team.getPitcher(pitcherIndex).setPitchStat(k - 1, numeral);
+            }
+            pitcherIndex++;
         }
 	}
 	
-	private ArrayList<int []> readUntilBlank(XSSFSheet sheet, int x, int n) {
-		
+	/**
+	 * This method should take in a XSSFSheet as a parameter and read a number of values n until the next row is blank 
+	 * @param sheet - the XSSFSheet to be read from
+	 * @param n - the number of values per line that we will be reading from the spreadsheet
+	 * @return the ArrayList of arrays representing the data from the spreadsheet 
+	 */
+	private ArrayList<int []> readUntilBlank(XSSFSheet sheet, int n) {
 		Iterator < Row > rowIterator = sheet.iterator();
-		
-		XSSFRow row = sheet.getRow(x);
+		XSSFRow row = sheet.getRow(0);
 		XSSFRow next = (XSSFRow) rowIterator.next();
 		ArrayList<int []> arr = new ArrayList<int []>();
 		while (rowIterator.hasNext()) {
-			
+			int [] data = new int[n];
+			for (int i = 0; i < n; i++) {
+				data[i] = (int) row.getCell(i).getNumericCellValue();
+			}
+			arr.add(data);
+		}
+		return arr;
+	}
+	
+	
+	/**
+	 * This method does not use the Row iterator class; instead, it starts at the index of row x and reads values until a blank line is reached.
+	 * @param sheet - the XSSFSheet to be read from
+	 * @param x - the index to start reading from
+	 * @param n - the number of value per line that we will be reading from the spreadsheet
+	 * @return the ArrayLis of arrays representing the data from the spreadsheet
+	 */
+	private ArrayList<int []> readUntilBlank(XSSFSheet sheet, int x, int n) {
+		XSSFRow row = sheet.getRow(x);
+		ArrayList<int []> arr = new ArrayList<int []>();
+		while (sheet.getRow(x+1).getCell(0).getCellType() != CellType.BLANK) {
+			int [] array = new int[12];
+			for (int i = 0; i < 12; i++) {
+				array[i] = (int) row.getCell(i).getNumericCellValue();
+			}
+			arr.add(array);
 		}
 		return arr;
 	}
