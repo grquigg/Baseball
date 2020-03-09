@@ -221,6 +221,7 @@ public class GameWithFile
         return workbook;
         
 	}
+	
     public void setup()
     {
         if (teamA != null && teamB != null)
@@ -237,8 +238,6 @@ public class GameWithFile
             //not sure what this code does yet, but it seems redundant
             teamA.usePitcherStats(pitcherB);
             teamB.usePitcherStats(pitcherA);
-            
-            
         }
     }
 
@@ -249,6 +248,11 @@ public class GameWithFile
 		t.setStartingPitcher();
 		t.displayLineup();
 	}
+	
+	public void runInn() {
+		
+	}
+	
     public void game()
     {
         for (int c = 0; c < teamA.returnLineup(); c++)
@@ -263,35 +267,35 @@ public class GameWithFile
         pitcherA.incrementPitch(1);
         pitcherB.incrementPitch(0);
         pitcherB.incrementPitch(1);
-        int tempOrderA;
-        int tempOrderB;
-        team1.add(new Inning(teamA, teamB, 0, 0, pitcherB));
-        team1.get(0).runInning(0, 0);
-        scoreboardA[0] = team1.get(0).reportScore() - scoreA;
-        scoreA = team1.get(0).reportScore();
-        
-        team2.add(new Inning(teamB, teamA, 0, 0, pitcherA));
-        team2.get(0).runInning(0, 0);
-        scoreboardB[0] = team2.get(0).reportScore() - scoreB;
-        scoreB = team2.get(0).reportScore();
-        
+        int tempOrderA = 0;
+        int tempOrderB = 0;
+//        team1.add(new Inning(teamA, teamB, 0, 0, pitcherB));
+//        team1.get(0).runInning(0, 0);
+//        scoreboardA[0] = team1.get(0).reportScore() - scoreA;
+//        scoreA = team1.get(0).reportScore();
+//        
+//        team2.add(new Inning(teamB, teamA, 0, 0, pitcherA));
+//        team2.get(0).runInning(0, 0);
+//        scoreboardB[0] = team2.get(0).reportScore() - scoreB;
+//        scoreB = team2.get(0).reportScore();
+//        
         teamA.displayTeamStats();
         teamB.displayTeamStats();
-        for (int i = 1; i < 9; i++)
+        for (int i = 0; i < 9; i++)
         {
-            tempOrderA = team1.get(i - 1).getOrder();
             team1.add(new Inning(teamA, teamB, tempOrderA, scoreA, pitcherB));
             team1.get(i).runInning(i, 0);
             teamA.displayTeamStats();
             scoreboardA[i] = team1.get(1).reportScore() - scoreA;
             scoreA = team1.get(i).reportScore();
+            tempOrderA = team1.get(i).getOrder();
             
-            tempOrderB = team2.get(i - 1).getOrder();
             team2.add(new Inning(teamB, teamA, tempOrderB, scoreB, pitcherA));
             team2.get(i).runInning(i, 0);
             teamB.displayTeamStats();
             scoreboardB[i] = team2.get(1).reportScore() - scoreB;
             scoreB = team2.get(i).reportScore();
+            tempOrderB = team2.get(i).getOrder();
         }
         if (scoreA == scoreB)
         {
@@ -327,16 +331,14 @@ public class GameWithFile
                 pitcherA.incrementPitch(3);
             }
     }
-    public void postGame() throws Exception
-    {
-        FileInputStream fIS = new FileInputStream("teams.xlsx");
-        XSSFWorkbook book = new XSSFWorkbook(fIS);
-        XSSFSheet sheet1 = book.getSheetAt(teamA.returnIndex());
-        int rowID = 1;
+    
+    
+    public void writeToFile(Team team, XSSFSheet sheet) {
+    	int rowID = 1;
         XSSFRow row;
         for (int x = 0; x < teamA.returnRoster() - 1; x++)
         {
-            row = sheet1.createRow(rowID);
+            row = sheet.createRow(rowID);
             Player p = teamA.getPlayer(x);
             row.createCell(0).setCellValue(p.getName());
             for (int j = 1; j < 12; j++)
@@ -348,7 +350,7 @@ public class GameWithFile
             row.getCell(12).setCellValue(p.getAvg());
             rowID++;
         }
-        row = sheet1.createRow(rowID);
+        row = sheet.createRow(rowID);
         row.createCell(0);
         for (int y = 1; y < 14; y++)
         {
@@ -358,66 +360,31 @@ public class GameWithFile
         rowID++;
         for (int z = 0; z < teamA.returnNumberOfPitchers(); z++)
         {
-            row = sheet1.createRow(rowID);
-            Pitcher pI = teamA.getPitcher(z);
+            row = sheet.createRow(rowID);
+            Pitcher p = teamA.getPitcher(z);
             row.createCell(0);
-            row.getCell(0).setCellValue(pI.getName());
+            row.getCell(0).setCellValue(p.getName());
             for (int s = 1; s < 12; s++)
             {
                 row.createCell(s);
-                row.getCell(s).setCellValue(pI.getPitchStat(s - 1));
+                row.getCell(s).setCellValue(p.getPitchStat(s - 1));
             }
             row.createCell(12);
-            row.getCell(12).setCellValue(pI.getIP());
+            row.getCell(12).setCellValue(p.getIP());
             row.createCell(13);
-            row.getCell(13).setCellValue(pI.getEra());
+            row.getCell(13).setCellValue(p.getEra());
             rowID++;
         }
+    }
+    
+    public void postGame() throws Exception
+    {
+        FileInputStream fIS = new FileInputStream("teams.xlsx");
+        XSSFWorkbook book = new XSSFWorkbook(fIS);
         
-        //There does NOT need to be this much code here. We can cut down this considerably by simply creating another method for writing to the file, ffs
-        XSSFSheet sheet2 = book.getSheetAt(teamB.returnIndex());
-        int rowId = 1;
-        XSSFRow Row;
-        for (int a = 0; a < teamB.returnRoster() - 1; a++)
-        {
-            Row = sheet2.createRow(rowId);
-            Player p = teamB.getPlayer(a);
-            Row.createCell(0);
-            Row.getCell(0).setCellValue(p.getName());
-            for (int j = 1; j < 12; j++)
-            {
-                Row.createCell(j);
-                Row.getCell(j).setCellValue(p.getStat(j - 1));
-            }
-            Row.createCell(12);
-            Row.getCell(12).setCellValue(p.getAvg());
-            rowId++;
-        }
-        Row = sheet2.createRow(rowId);
-        Row.createCell(0);
-        for (int y = 1; y < 14; y++)
-        {
-            Row.createCell(y);
-            Row.getCell(y).setCellValue(teamB.pitcherStats[y - 1]);
-        }
-        rowId++;
-        for (int z = 0; z < teamB.returnNumberOfPitchers(); z++)
-        {
-            Row = sheet2.createRow(rowId);
-            Pitcher pI = teamB.getPitcher(z);
-            Row.createCell(0);
-            Row.getCell(0).setCellValue(pI.getName());
-            for (int s = 1; s < 12; s++)
-            {
-                Row.createCell(s);
-                Row.getCell(s).setCellValue(pI.getPitchStat(s - 1));
-            }
-            Row.createCell(12);
-            Row.getCell(12).setCellValue(pI.getIP());
-            Row.createCell(13);
-            Row.getCell(13).setCellValue(pI.getEra());
-            rowId++;
-        }
+        writeToFile(teamA, book.getSheetAt(teamA.returnIndex()));
+        writeToFile(teamB, book.getSheetAt(teamB.returnIndex()));
+
         System.out.println("Data has been entered. Game is finished.");
         FileOutputStream out = new FileOutputStream("teams.xlsx");
         book.write(out);

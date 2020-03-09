@@ -23,7 +23,7 @@ public class InningTester
         whitesox.addPlayer("Jake", "Left Fielder");
         whitesox.addToLineup(0);
         whitesox.addToLineup(1);
-        first.runInning(1, 0);
+        first.runInning(0, 0);
         whitesox.displayTeamStats();
         System.out.println("G\tGS\tW\tL\tSV\tER\tH\tSO\tBB\tFO\tGO\tIP\tERA");
         p.displayPitchStats();

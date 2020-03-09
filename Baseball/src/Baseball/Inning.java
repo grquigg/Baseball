@@ -25,7 +25,8 @@ public class Inning
     private ArrayList<Plays> plays = new ArrayList<Plays>();
     private int order;
     private int count;
-    public Inning(Team t, Team u,int x, int s, Pitcher opp)
+    
+    public Inning(Team t, Team u, int x, int s, Pitcher opp)
     {
         team1 = t;
         team2 = u;
@@ -38,6 +39,12 @@ public class Inning
         pitcher = (Pitcher) opp;
     }
     
+    /**
+     * This method takes in an integer n and a boolean b and handles the different cases for getting runners on and off base and scoring. We treat the bases as an array of booleans where
+     * if a "runner" falls off the end of the array then they are assumed to have scored. If b is true then a new baserunner is added to the (n-1)th spot in the array.
+     * @param n - the number of places for the base runners to move. 
+     * @param b - whether or not a new base runner should be added into the array. 
+     */
     public void baseRunner(int n, boolean b) {
 
     	for (int i = 2; i >= 0; i--) {
@@ -71,7 +78,12 @@ public class Inning
     	}
     }
     
-    public void run_inning(int i, int o) {
+    /**This method plays through an inning i of baseball for the Team that it is assigned to. The while loop goes through the order of the lineup that was given (starting at o) and goes through until
+     * three outs have been reached.
+     * @param i - the inning number
+     * @param o - i don't actually remember what this does lmao 
+     */
+    public void runInning(int i, int o) {
     	inning = i + 1; //this is the correct inning order
     	System.out.println(team1.getTeamName() + " are batting in Inning " + inning + ".");
     	reader.nextLine();
@@ -140,17 +152,27 @@ public class Inning
             }
     		System.out.println(outs + " out.");
     		reader.nextLine();
+    		order = (order + 1) % team1.returnLineup();
     	}
     }
-    
+    /**
+     * This method returns the score of an inning to the user.
+     * @return the score of the inning.
+     */
     public int reportScore()
     {
         return score;
     }
+    
+    /**
+     * Returns the last player to have batted in the inning. 
+     * @return the index in the lineup of the last player to have batted in the inning. 
+     */
     public int getOrder()
     {
         return order;
     }
+    
     public void prompt()
     {
         String input;
