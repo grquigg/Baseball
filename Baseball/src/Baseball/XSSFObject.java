@@ -14,6 +14,11 @@ public class XSSFObject {
 	XSSFWorkbook workbook;
 	XSSFSheet sheet;
 	
+	
+	public XSSFObject() {
+		
+	}
+	
 	/**
 	 * This constructor instantiates a new instance of XSSFObject with a reference to a specific XSSFSheet and the file name. 
 	 * @param fileName - the name of the file

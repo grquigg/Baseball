@@ -21,7 +21,7 @@ import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xssf.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-public class Team
+public class Team extends XSSFObject
 {
     private ArrayList<Player> roster = new ArrayList<Player>();
     public ArrayList<Player> lineup = new ArrayList<Player>();
@@ -37,66 +37,18 @@ public class Team
     private int index;
     private Pitcher starter;
     Scanner reader = new Scanner(System.in);
-    public String [] hitterStats = new String[12];
-    public String [] pitcherStats = new String[13];
+    public String [] hitterStats= {"G", "H", "AB", "2B", "3B", "HR", "RBI", "SO", "GO", "FO", "BB", "AVG"};
+    public String [] pitcherStats = {"G", "GS", "W", "L", "SV", "ER", "H", "SO", "BB", "FO", "GO", "IP", "ERA"};
+    
     public Team(String n)
-    {
-        hitterStats[0] = "G";
-        hitterStats[1] = "H";
-        hitterStats[2] = "AB";
-        hitterStats[3] = "2B";
-        hitterStats[4] = "3B";
-        hitterStats[5] = "HR";
-        hitterStats[6] = "RBI";
-        hitterStats[7] = "SO";
-        hitterStats[8] = "GO";
-        hitterStats[9] = "FO";
-        hitterStats[10] = "BB";
-        hitterStats[11] = "AVG";
-        pitcherStats[0] = "G";
-        pitcherStats[1] = "GS";
-        pitcherStats[2] = "W";
-        pitcherStats[3] = "L";
-        pitcherStats[4] = "SV";
-        pitcherStats[5] = "ER";
-        pitcherStats[6] = "H";
-        pitcherStats[7] = "SO";
-        pitcherStats[8] = "BB";
-        pitcherStats[9] = "FO";
-        pitcherStats[10] = "GO";
-        pitcherStats[11] = "IP";
-        pitcherStats[12] = "ERA";    
+    {  
         name = n;
         switchPitcher = true;
         lineupIsFull = true;
     }
+    
     public Team(String n, int x)
     {
-        hitterStats[0] = "G";
-        hitterStats[1] = "H";
-        hitterStats[2] = "AB";
-        hitterStats[3] = "2B";
-        hitterStats[4] = "3B";
-        hitterStats[5] = "HR";
-        hitterStats[6] = "RBI";
-        hitterStats[7] = "SO";
-        hitterStats[8] = "GO";
-        hitterStats[9] = "FO";
-        hitterStats[10] = "BB";
-        hitterStats[11] = "AVG";
-        pitcherStats[0] = "G";
-        pitcherStats[1] = "GS";
-        pitcherStats[2] = "W";
-        pitcherStats[3] = "L";
-        pitcherStats[4] = "SV";
-        pitcherStats[5] = "ER";
-        pitcherStats[6] = "H";
-        pitcherStats[7] = "SO";
-        pitcherStats[8] = "BB";
-        pitcherStats[9] = "FO";
-        pitcherStats[10] = "GO";
-        pitcherStats[11] = "IP";
-        pitcherStats[12] = "ERA";
         name = n;
         switchPitcher = true;
         lineupIsFull = true;
@@ -104,31 +56,6 @@ public class Team
     }
     public Team(String n, File f, int x) throws Exception
     {
-        hitterStats[0] = "G";
-        hitterStats[1] = "H";
-        hitterStats[2] = "AB";
-        hitterStats[3] = "2B";
-        hitterStats[4] = "3B";
-        hitterStats[5] = "HR";
-        hitterStats[6] = "RBI";
-        hitterStats[7] = "SO";
-        hitterStats[8] = "GO";
-        hitterStats[9] = "FO";
-        hitterStats[10] = "BB";
-        hitterStats[11] = "AVG";
-        pitcherStats[0] = "G";
-        pitcherStats[1] = "GS";
-        pitcherStats[2] = "W";
-        pitcherStats[3] = "L";
-        pitcherStats[4] = "SV";
-        pitcherStats[5] = "ER";
-        pitcherStats[6] = "H";
-        pitcherStats[7] = "SO";
-        pitcherStats[8] = "BB";
-        pitcherStats[9] = "FO";
-        pitcherStats[10] = "GO";
-        pitcherStats[11] = "IP";
-        pitcherStats[12] = "ERA";
         name = n;
         index = x;
         storage = f;
