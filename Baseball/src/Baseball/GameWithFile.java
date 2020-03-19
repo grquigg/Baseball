@@ -52,8 +52,11 @@ public class GameWithFile
         XSSFWorkbook workbook = locateFile();
 		int number = workbook.getNumberOfSheets();
 		
-        if (number <= 1) {
-        	promptForSheets(number);
+        if (number == 0) {
+        	promptForZeroSheets(number);
+        }
+        else if (number == 1) {
+        	promptForOneSheet(number);
         }
         FileInputStream fIS = new FileInputStream("teams.xlsx");
         workbook = new XSSFWorkbook(fIS);
@@ -68,36 +71,52 @@ public class GameWithFile
             TeamAIndex = reader.nextInt();
             teamA = new Team(workbook.getSheetAt(TeamAIndex).getSheetName(), TeamAIndex);
             XSSFSheet teamASheet = workbook.getSheetAt(TeamAIndex);
-            teamA.Unpack_data(teamA, teamASheet, indexSplitA);
+            teamA.Unpack_data(teamASheet, indexSplitA);
             
             int TeamBIndex;
             System.out.println("Which team would you like to have as Team 2?");
             TeamBIndex = reader.nextInt();
             teamB = new Team(workbook.getSheetAt(TeamBIndex).getSheetName(), TeamBIndex);
             XSSFSheet teamBSheet = workbook.getSheetAt(TeamBIndex);
-            teamB.Unpack_data(teamB, teamBSheet, indexSplitB);
+            teamB.Unpack_data(teamBSheet, indexSplitB);
             System.out.println("Teams have been set");
         }
     }                
 
 
-	public void promptForSheets(int number) throws Exception {
+	private void promptForZeroSheets(int n) throws Exception{
 		String response;
-		for (int i = 0; i < number; i++) {
-            System.out.println("Not enough data to properly execute. Create a new spreadsheet?");
-            response = reader.nextLine();
-            if (response.equals("Yes"))
+        System.out.println("Not enough data to properly execute. Create a new spreadsheet?");
+        response = reader.nextLine();
+        if (response.equals("Yes"))
+        {
+            commands.addTeam();
+            n++;
+        }
+            else if (response.equals("No"))
             {
-                commands.addTeam();
-                number = 1;
+                System.out.println("Error. Please exit the program and try again.");
+                //again, not sure what to do here
+                //exit game
             }
-                else if (response.equals("No"))
-                {
-                    System.out.println("Error. Please exit the program and try again.");
-                    //again, not sure what to do here
-                    //exit game
-                }
-		}
+        promptForOneSheet(n);
+	}
+
+	private void promptForOneSheet(int n) throws Exception{
+		String response;
+        System.out.println("Not enough data to properly execute. Create a new spreadsheet?");
+        response = reader.nextLine();
+        if (response.equals("Yes"))
+        {
+            commands.addTeam();
+            n++;
+        }
+            else if (response.equals("No"))
+            {
+                System.out.println("Error. Please exit the program and try again.");
+                //again, not sure what to do here
+                //exit game
+            }
 	}
 
 	public XSSFWorkbook locateFile() throws FileNotFoundException, IOException {

@@ -31,49 +31,43 @@ public class Plays
     {
         varb = rn.nextInt(player.returnTempSize());
         play = player.addAtBat(varb);
-        if (play.equals("Single"))
-        {
-            player.increment(1);
+        switch(play) {
+        case "Single":
+        	player.increment(1);
+        	player.increment(2);
+        	break;
+        case "Double":
+        	player.increment(1);
+        	player.increment(2);
+        	player.increment(3);
+        	break;
+        case "Triple":
+        	player.increment(1);
+        	player.increment(2);
+        	player.increment(4);
+        	break;
+        case "Home Run":
+        	player.increment(1);
             player.increment(2);
+            player.increment(5);
+            player.increment(6);
+            break;
+        case "Strikeout":
+        	player.increment(2);
+            player.increment(7);
+            break;
+        case "Groundout":
+        	player.increment(2);
+            player.increment(8);
+            break;
+        case "Flyout":
+        	player.increment(2);
+            player.increment(9);
+            break;
+        case "Walk":
+        	player.increment(10);
+        	break;
         }
-            else if (play.equals("Double"))
-            {
-                player.increment(1);
-                player.increment(2);
-                player.increment(3);
-            }
-                else if (play.equals("Triple"))
-                {
-                    player.increment(1);
-                    player.increment(2);
-                    player.increment(4);
-                }
-                    else if (play.equals("Home Run"))
-                    {
-                        player.increment(1);
-                        player.increment(2);
-                        player.increment(5);
-                        player.increment(6);
-                    }
-                        else if (play.equals("Strikeout"))
-                        {
-                            player.increment(2);
-                            player.increment(7);
-                        }
-                            else if (play.equals("Groundout"))
-                            {
-                                player.increment(2);
-                                player.increment(8);
-                            }
-                                else if (play.equals("Flyout"))
-                                {
-                                    player.increment(2);
-                                    player.increment(9);
-                                }
-                                    else if (play.equals("Walk"))
-                                    {
-                                        player.increment(10);
-                                    }
         Return.add(play);
     }
     public String mostRecent()

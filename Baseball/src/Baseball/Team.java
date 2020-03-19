@@ -420,7 +420,7 @@ public class Team extends XSSFObject
 	 * they encounter a blank row. 
 	 * 
 	 */
-	public void Unpack_data(Team team, XSSFSheet sheet, int split) {
+	public void Unpack_data(XSSFSheet sheet, int split) {
 		// TODO Auto-generated method stub
         Iterator < Row > rowIterator = sheet.iterator();
         int pitcherIndex = 0;
@@ -438,14 +438,14 @@ public class Team extends XSSFObject
             System.out.println(newRow.getRowNum());
             if (newRow.getCell(0).getCellType() != CellType.BLANK)
             {
-            	team.addPlayer(newRow.getCell(0).getStringCellValue(), "Batter"); //if position is irrelevant, then why include it in the first place?
+            	addPlayer(newRow.getCell(0).getStringCellValue(), "Batter"); //if position is irrelevant, then why include it in the first place?
                 for (int j = 1; j < 12; j++)
                 {
                     int num = (int) newRow.getCell(j).getNumericCellValue();
                     //System.out.println(num);
-                    team.getPlayer(playerIndex).setStat(j-1, num);
+                    getPlayer(playerIndex).setStat(j-1, num);
                 }
-                team.useStats(team.getPlayer(playerIndex)); //i don't know what this does
+                useStats(getPlayer(playerIndex)); //i don't know what this does
                 playerIndex++;
             }
             else if (newRow.getCell(0).getCellType() == CellType.BLANK)
@@ -456,12 +456,12 @@ public class Team extends XSSFObject
         while (rowIterator.hasNext()) {
         	System.out.println("Beginning of the second while loop");
         	newRow = (XSSFRow) rowIterator.next();
-        	team.addToRotation(new Pitcher(newRow.getCell(0).getStringCellValue(), "Pitcher"));
+        	addToRotation(new Pitcher(newRow.getCell(0).getStringCellValue(), "Pitcher"));
             for (int k = 1; k < 11; k++)
             {
                 int numeral = (int) newRow.getCell(k).getNumericCellValue();
                     //System.out.println(numeral);
-                team.getPitcher(pitcherIndex).setPitchStat(k - 1, numeral);
+                getPitcher(pitcherIndex).setPitchStat(k - 1, numeral);
             }
             pitcherIndex++;
         }
