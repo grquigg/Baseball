@@ -60,8 +60,6 @@ public class GameWithFile
         }
         FileInputStream fIS = new FileInputStream("teams.xlsx");
         workbook = new XSSFWorkbook(fIS);
-        if (number >= 2)
-        {
             for (int i = 0; i < number; i++)
             {
                 System.out.println(i + "\t" + workbook.getSheetAt(i).getSheetName());
@@ -80,7 +78,6 @@ public class GameWithFile
             XSSFSheet teamBSheet = workbook.getSheetAt(TeamBIndex);
             teamB.Unpack_data(teamBSheet, indexSplitB);
             System.out.println("Teams have been set");
-        }
     }                
 
 
@@ -136,6 +133,7 @@ public class GameWithFile
 	
     public void setup()
     {
+    	System.out.println("Setup method");
         if (teamA != null && teamB != null)
         {
             System.out.println("Enter data for Team 1.");
@@ -159,10 +157,6 @@ public class GameWithFile
 		t.fillLineupPrompt();
 		t.setStartingPitcher();
 		t.displayLineup();
-	}
-	
-	public void runInn() {
-		
 	}
 	
     public void game()
