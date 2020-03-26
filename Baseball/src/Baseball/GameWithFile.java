@@ -15,6 +15,14 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
 
+/*TO-DO
+ * Figure out why the scores in each inning aren't updating properly
+ * Figure out a command for skipping the adding player to roster menu nonsense
+ * Figure out a good UI for this game
+ * Figure out how to connect to a database
+ * Figure out how to create a default lineup
+ * 
+ */
 public class GameWithFile
 {
 	Scanner reader = new Scanner(System.in);
@@ -60,13 +68,17 @@ public class GameWithFile
         }
         FileInputStream fIS = new FileInputStream("teams.xlsx");
         workbook = new XSSFWorkbook(fIS);
-            for (int i = 0; i < number; i++)
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++)
             {
                 System.out.println(i + "\t" + workbook.getSheetAt(i).getSheetName());
             }
             int TeamAIndex;
             System.out.println("Which team would you like to have as Team 1 (the visiting team)?");
             TeamAIndex = reader.nextInt();
+            while (TeamAIndex < 0 || TeamAIndex >= workbook.getNumberOfSheets()) {
+            	System.out.println("Invalid entry. Please choose a diferent index");
+            	TeamAIndex = reader.nextInt();
+            }
             teamA = new Team(workbook.getSheetAt(TeamAIndex).getSheetName(), TeamAIndex);
             XSSFSheet teamASheet = workbook.getSheetAt(TeamAIndex);
             teamA.Unpack_data(teamASheet, indexSplitA);
@@ -74,6 +86,10 @@ public class GameWithFile
             int TeamBIndex;
             System.out.println("Which team would you like to have as Team 2?");
             TeamBIndex = reader.nextInt();
+            while (TeamBIndex < 0 || TeamBIndex >= workbook.getNumberOfSheets() || TeamBIndex == TeamAIndex) {
+            	System.out.println("Invalid entry. Please choose a diferent index");
+            	TeamBIndex = reader.nextInt();
+            }
             teamB = new Team(workbook.getSheetAt(TeamBIndex).getSheetName(), TeamBIndex);
             XSSFSheet teamBSheet = workbook.getSheetAt(TeamBIndex);
             teamB.Unpack_data(teamBSheet, indexSplitB);
@@ -187,22 +203,25 @@ public class GameWithFile
 //        
         teamA.displayTeamStats();
         teamB.displayTeamStats();
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 5; i++)
         {
             team1.add(new Inning(teamA, teamB, tempOrderA, scoreA, pitcherB));
             team1.get(i).runInning(i, 0);
             teamA.displayTeamStats();
-            scoreboardA[i] = team1.get(1).reportScore() - scoreA;
-            scoreA = team1.get(i).reportScore();
+            scoreboardA[i] = team1.get(i).reportScore() - scoreA;
+            scoreA += team1.get(i).reportScore();
+            System.out.println(scoreA);
             tempOrderA = team1.get(i).getOrder();
             
             team2.add(new Inning(teamB, teamA, tempOrderB, scoreB, pitcherA));
             team2.get(i).runInning(i, 0);
             teamB.displayTeamStats();
-            scoreboardB[i] = team2.get(1).reportScore() - scoreB;
-            scoreB = team2.get(i).reportScore();
+            scoreboardB[i] = team2.get(i).reportScore() - scoreB;
+            scoreB += team2.get(i).reportScore();
+            System.out.println(scoreB);
             tempOrderB = team2.get(i).getOrder();
         }
+        System.out.println(scoreA + " " + scoreB);
         if (scoreA == scoreB)
         {
             while (scoreA == scoreB)
@@ -213,14 +232,14 @@ public class GameWithFile
                 team1.get(numeral).runInning(numeral, 0);
                 //teamA.displayTeamStats();
                 //scoreboardA[numeral] = team1.get(numeral).reportScore() - scoreA;
-                scoreA = team1.get(numeral).reportScore();
+                scoreA += team1.get(numeral).reportScore();
                 
                 tempOrderB = team2.get(numeral - 1).getOrder();
                 team2.add(new Inning(teamB, teamA, tempOrderB, scoreB, pitcherA));
                 team2.get(numeral).runInning(numeral, 0);
                 //teamB.displayTeamStats();
                 //scoreboardB[numeral] = team2.get(numeral).reportScore() - scoreB;
-                scoreB = team2.get(numeral).reportScore();
+                scoreB += team2.get(numeral).reportScore();
                     }
                 }
                 

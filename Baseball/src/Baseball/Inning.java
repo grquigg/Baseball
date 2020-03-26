@@ -54,6 +54,7 @@ public class Inning
     				team1.getPlayerFromLineup(order).increment(6);
     				pitcher.incrementPitch(5);
     				bases[i] = false;
+    				score++;
     			}
     			else {
     				boolean temp = bases[i];
@@ -126,7 +127,7 @@ public class Inning
             			System.out.print(team1.getName(order) + " has hit a sacrifice fly.");
             		}
             		else {
-            			System.out.print(team1.getName(order) + " has flied out.");
+            			System.out.print(team1.getName(order) + " has flied out. ");
             		}
             		baseRunner(0, false);
             	}
