@@ -63,8 +63,11 @@ public class Inning
     			}
     		}
     	}
-		if (b && n < 3) {
+		if (b && n <= 3) {
 			bases[n-1] = true;
+		}
+		else if (b && n > 3) {
+			score++;
 		}
     	if (bases[0]) {
     		System.out.print("Runner on 1st. ");
@@ -124,15 +127,16 @@ public class Inning
             else if (temp.equals("Flyout")) {
             	if (outs < 2) {
             		if (bases[2]) {
-            			System.out.print(team1.getName(order) + " has hit a sacrifice fly.");
+            			System.out.print(team1.getName(order) + " has hit a sacrifice fly. ");
+            			baseRunner(1, false);
             		}
             		else {
             			System.out.print(team1.getName(order) + " has flied out. ");
+            			baseRunner(0, false);
             		}
-            		baseRunner(0, false);
             	}
             	else {
-            		System.out.print(team1.getName(order) + " has flied out.");
+            		System.out.print(team1.getName(order) + " has flied out. ");
             	}
         		pitcher.incrementPitch(9);
         		outs++;
@@ -155,6 +159,9 @@ public class Inning
     		reader.nextLine();
     		order = (order + 1) % team1.returnLineup();
     	}
+    	bases[0] = false;
+    	bases[1] = false;
+    	bases[2] = false;
     }
     /**
      * This method returns the score of an inning to the user.

@@ -209,7 +209,7 @@ public class GameWithFile
             team1.get(i).runInning(i, 0);
             teamA.displayTeamStats();
             scoreboardA[i] = team1.get(i).reportScore() - scoreA;
-            scoreA += team1.get(i).reportScore();
+            scoreA = team1.get(i).reportScore();
             System.out.println(scoreA);
             tempOrderA = team1.get(i).getOrder();
             
@@ -217,7 +217,7 @@ public class GameWithFile
             team2.get(i).runInning(i, 0);
             teamB.displayTeamStats();
             scoreboardB[i] = team2.get(i).reportScore() - scoreB;
-            scoreB += team2.get(i).reportScore();
+            scoreB = team2.get(i).reportScore();
             System.out.println(scoreB);
             tempOrderB = team2.get(i).getOrder();
         }
@@ -232,14 +232,14 @@ public class GameWithFile
                 team1.get(numeral).runInning(numeral, 0);
                 //teamA.displayTeamStats();
                 //scoreboardA[numeral] = team1.get(numeral).reportScore() - scoreA;
-                scoreA += team1.get(numeral).reportScore();
+                scoreA = team1.get(numeral).reportScore();
                 
                 tempOrderB = team2.get(numeral - 1).getOrder();
                 team2.add(new Inning(teamB, teamA, tempOrderB, scoreB, pitcherA));
                 team2.get(numeral).runInning(numeral, 0);
                 //teamB.displayTeamStats();
                 //scoreboardB[numeral] = team2.get(numeral).reportScore() - scoreB;
-                scoreB += team2.get(numeral).reportScore();
+                scoreB = team2.get(numeral).reportScore();
                     }
                 }
                 

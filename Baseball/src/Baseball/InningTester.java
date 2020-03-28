@@ -27,6 +27,7 @@ public class InningTester
         whitesox.displayTeamStats();
         System.out.println("G\tGS\tW\tL\tSV\tER\tH\tSO\tBB\tFO\tGO\tIP\tERA");
         p.displayPitchStats();
+        System.out.println(first.reportScore());
         //needs info for the team in order to run
     }
 }
