@@ -203,7 +203,7 @@ public class GameWithFile
 //        
         teamA.displayTeamStats();
         teamB.displayTeamStats();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 1; i++)
         {
             team1.add(new Inning(teamA, teamB, tempOrderA, scoreA, pitcherB));
             team1.get(i).runInning(i, 0);
