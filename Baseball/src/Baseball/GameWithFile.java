@@ -11,6 +11,8 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.ArrayList;
+
+import org.apache.poi.EmptyFileException;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
@@ -94,6 +96,7 @@ public class GameWithFile
             XSSFSheet teamBSheet = workbook.getSheetAt(TeamBIndex);
             teamB.Unpack_data(teamBSheet, indexSplitB);
             System.out.println("Teams have been set");
+        
     }                
 
 
@@ -134,7 +137,7 @@ public class GameWithFile
 
 	public XSSFWorkbook locateFile() throws FileNotFoundException, IOException {
 		File fs = new File("teams.xlsx");
-        XSSFWorkbook workbook;
+        XSSFWorkbook workbook = null;
         if (!fs.exists())
         {
             workbook = new XSSFWorkbook();
@@ -142,7 +145,17 @@ public class GameWithFile
             workbook.write(fOS);
             fOS.close();
         }
-        workbook = new XSSFWorkbook("teams.xlsx");
+        try {
+            workbook = new XSSFWorkbook("teams.xlsx");
+        }
+        catch (EmptyFileException e) {
+        	try {
+				commands.rewriteFile();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+        }
+        workbook =  new XSSFWorkbook("teams.xlsx");
         return workbook;
         
 	}

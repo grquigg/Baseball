@@ -8,14 +8,12 @@ package Baseball;
  * @version (a version number or a date)
  */
 
-import java.util.Scanner;
 public class GameTester
 {
     public static void main (String [] args) throws Exception
     {
         GameWithFile newGame = new GameWithFile();
-        Commands commandLine = new Commands();
-        //commandLine.rewriteFile();
+        Commands.rewriteFile();
         //commandLine.addTeam();
         System.out.println("Done.");
         newGame.chooseTeams();
