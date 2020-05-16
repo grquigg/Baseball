@@ -140,9 +140,10 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
 		else if (arg0.getSource() == playerSelectionButton) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					//new SelectPlayersMenu(Team 1, Team 2);
+					new SelectPlayersMenu().createAndShowGUI();
 				}
 			});
+			dispose();
 		}
 		
 	}

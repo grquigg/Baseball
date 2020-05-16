@@ -12,35 +12,48 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import Baseball.SelectTeamsMenu.createNewTeamGUI;
+
 public class SelectPlayersMenu extends JFrame implements ActionListener, ListSelectionListener {
 
-    JList listPlayersTeam1;
-    JList listPlayersTeam2;
-    DefaultListModel listModelTeam1;
-    DefaultListModel listModelTeam2;
+    JList<String> listPlayersTeam1;
+    JList<String> listPlayersTeam2;
+    JList<String> listLineup1;
+    JList<String> listLineup2;
+    DefaultListModel<String> listModelTeam1;
+    DefaultListModel<String> listModelTeam2;
+    DefaultListModel<String> listModelLineupA;
+    DefaultListModel<String> listModelLineupB;
+    JScrollPane listScrollPane;
+    JScrollPane listScrollPane2;
     JLabel team1;
     JLabel team2;
-    JButton select;
-    JButton select2;
-    JButton createNewTeam;
+    Team teamA;
+    Team teamB;
+    JButton selectPlayerTeam1;
+    JButton selectPlayerTeam2;
+    JButton createNewPlayerTeam1;
+    JButton createNewPlayerTeam2;
     JButton startGameButton;
+    String[] array = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    String[] arrayTeam2 = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    JScrollPane listScrollPaneTeamA;
+    JScrollPane listScrollPaneTeamB;
 	
 	public SelectPlayersMenu() {
 		super("Select Players");
 		setLayout(new GridBagLayout());
+		teamA = new Team("Black");
+		teamB = new Team("White");
 		GridBagConstraints gc = new GridBagConstraints();
 		
-		listModelTeam1 = new DefaultListModel();
-        listModelTeam1.addElement("Potato");
-        listModelTeam1.addElement("Tomato");
-        
-        listModelTeam2 = new DefaultListModel();
-        listModelTeam2.addElement("Strawberry");
-        listModelTeam2.addElement("Elephant");
+		listModelTeam1 = new DefaultListModel<String>();
+        listModelTeam2 = new DefaultListModel<String>();
         
         JLabel setupTeam1 = new JLabel("Enter information for Team Black");
         gc.fill = GridBagConstraints.NONE;
@@ -53,40 +66,43 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 		add(setupTeam1, gc);
 		
 		JLabel label1 = new JLabel("Name");
-		gc.weighty = 0.01;
+		gc.weighty = 0.03;
 		gc.gridy = 1;
 		gc.insets = new Insets(0, 12, 0, 0);
 		add(label1, gc);
 		
-		gc.anchor = gc.NORTH;
+		//gc.anchor = gc.NORTHWEST;
 		gc.insets = new Insets(0, 10, 0, 0);
-		listPlayersTeam1 = new JList(listModelTeam1);
+		listPlayersTeam1 = new JList<String>(listModelTeam1);
         listPlayersTeam1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listPlayersTeam1.setSelectedIndex(0);
         listPlayersTeam1.setVisibleRowCount(5);
-        JScrollPane listScrollPane = new JScrollPane(listPlayersTeam1);
+        listScrollPane = new JScrollPane(listPlayersTeam1);
         gc.gridy = 2;
         gc.weighty = 0.05;
+        gc.ipadx = 320;
         gc.gridwidth = 2;
         //gc.fill = GridBagConstraints.HORIZONTAL;
         add(listScrollPane, gc);
 		
         gc.fill = gc.NONE;
-        gc.anchor = gc.CENTER;
-        JButton button = new JButton("Select Player");
-        gc.insets = new Insets(0, 0, 0, 50);
-        gc.gridwidth = 1;
+        gc.anchor = gc.EAST;
+        selectPlayerTeam1 = new JButton("Select Player");
+        gc.ipadx = 0;
         gc.gridy = 3;
         gc.gridx = 1;
-        gc.weighty = 0.3;
+        gc.weighty = 0.2;
         //gc.ipadx = 60;
-        add(button, gc);
+        add(selectPlayerTeam1, gc);
+        selectPlayerTeam1.addActionListener(this);
         
-        JButton addNewTeamMember = new JButton("Add New Player");
+        gc.anchor = gc.WEST;
+        createNewPlayerTeam1 = new JButton("Add New Player");
         gc.ipadx = 0;
-        gc.insets = new Insets(0, 20, 0, 0);
+        gc.insets = new Insets(0, 10, 0, 0);
         gc.gridx = 0;
-        add(addNewTeamMember, gc);
+        add(createNewPlayerTeam1, gc);
+        createNewPlayerTeam1.addActionListener(this);
         
         gc.insets = new Insets(10, 12, 0, 0);
         gc.anchor = gc.NORTHWEST;
@@ -97,50 +113,90 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 		add(setupTeam2, gc);
 		
 		JLabel label2 = new JLabel("Name");
-		gc.weighty = 0.01;
+		gc.weighty = 0.03;
 		gc.gridy = 5;
 		gc.insets = new Insets(0, 12, 0, 0);
 		add(label2, gc);
 		
-		gc.anchor = gc.NORTH;
-		gc.gridwidth = 2;
-		listPlayersTeam2 = new JList(listModelTeam1);
+		gc.anchor = gc.NORTHWEST;
+		listPlayersTeam2 = new JList<String>(listModelTeam2);
         listPlayersTeam2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listPlayersTeam2.setSelectedIndex(0);
         listPlayersTeam2.setVisibleRowCount(5);
-        JScrollPane listScrollPane2 = new JScrollPane(listPlayersTeam2);
+        listScrollPane2 = new JScrollPane(listPlayersTeam2);
         gc.gridy = 6;
         //gc.gridx = 0;
         gc.weighty = 0.03;
-        gc.ipadx = 100;
-        gc.gridwidth = 2;
+        gc.ipadx = 320;
         //gc.fill = GridBagConstraints.HORIZONTAL;
         add(listScrollPane2, gc);
         
         gc.fill = gc.NONE;
-        gc.anchor = gc.CENTER;
+        gc.anchor = gc.EAST;
         gc.ipadx = 0;
-        JButton button2 = new JButton("Select Player");
-        gc.insets = new Insets(0, 0, 0, 50);
-        gc.gridwidth = 1;
+        selectPlayerTeam2 = new JButton("Select Player");
+        //gc.insets = new Insets(0, 0, 0, 50);
         gc.gridy = 7;
         gc.gridx = 1;
-        gc.weighty = 0.3;
-        add(button2, gc);
+        gc.weighty = 0.2;
+        add(selectPlayerTeam2, gc);
+        selectPlayerTeam2.addActionListener(this);
         
-        JButton addNewTeamMember2 = new JButton("Add New Player");
-        gc.insets = new Insets(0, 20, 0, 0);
+        gc.anchor = gc.WEST;
+        createNewPlayerTeam2 = new JButton("Add New Player");
+        gc.insets = new Insets(0, 10, 0, 0);
         gc.gridx = 0;
-        add(addNewTeamMember2, gc);
+        add(createNewPlayerTeam2, gc);
+        createNewPlayerTeam2.addActionListener(this);
         
         JLabel lab = new JLabel("Section for lineups");
         gc.insets = new Insets(10, 12, 0, 0);
-        gc.anchor = gc.CENTER;
+        gc.anchor = gc.NORTH;
         gc.gridx = 2;
         gc.gridy = 0;
+        gc.weighty = 0.03;
         gc.weightx = 1;
         add(lab, gc);
-		setSize(800, 500);
+       
+        listModelLineupA = new DefaultListModel<String>();
+        listModelLineupB = new DefaultListModel<String>();
+        for (int i = 0; i < 9; i++) {
+        	listModelLineupA.addElement(Integer.toString(i+1));
+        	listModelLineupB.addElement(Integer.toString(i+1));
+        }
+        
+        listLineup1 = new JList<String>(listModelLineupA);
+        listLineup1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listLineup1.setSelectedIndex(0);
+        listLineup1.setVisibleRowCount(9);
+        listScrollPaneTeamA = new JScrollPane(listLineup1);
+        gc.gridx = 2;
+        gc.gridy = 1;
+        gc.weighty = 0.03;
+        gc.gridheight = 3;
+        gc.ipadx = 200;
+        add(listScrollPaneTeamA, gc);
+        
+        JLabel lab2 = new JLabel("Section for second lineup");
+        gc.ipadx = 0;
+		gc.gridx = 2;
+		gc.gridy = 4;
+		add(lab2, gc);
+		
+		
+		listLineup2 = new JList<String>(listModelLineupB);
+        listLineup2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listLineup2.setSelectedIndex(0);
+        listLineup2.setVisibleRowCount(9);
+        listScrollPaneTeamB = new JScrollPane(listLineup2);
+        gc.gridx = 2;
+        gc.gridy = 5;
+        gc.weighty = 0.03;
+        gc.gridheight = 3;
+        gc.ipadx = 200;
+        add(listScrollPaneTeamB, gc);
+        
+		setSize(900, 500);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
@@ -152,8 +208,32 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(e.getSource() == createNewPlayerTeam1) {
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					new createNewPlayerGUI("Create New Team", teamA, listModelTeam1).createAndShowGUI(teamA);
+				}
+			});
+		}
+		else if (e.getSource() == createNewPlayerTeam2) {
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					new createNewPlayerGUI("Create New Team", teamB, listModelTeam2).createAndShowGUI(teamB);
+				}
+			});
+		}
+		else if(e.getSource() == selectPlayerTeam1) {
+			int index = listLineup1.getSelectedIndex();
+			String player = listModelLineupA.get(index).charAt(0) + " " + listPlayersTeam1.getSelectedValue();
+			System.out.println(index);
+			listModelLineupA.set(index, player);
+		}
+		else if(e.getSource() == selectPlayerTeam2) {
+			int index = listLineup2.getSelectedIndex();
+			String player = listModelLineupB.get(index).charAt(0) + " " + listPlayersTeam2.getSelectedValue();
+			System.out.println(index);
+			listModelLineupB.set(index, player);
+		}
 	}
 	
 	
@@ -162,7 +242,7 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
   * this method should be invoked from the
   * event-dispatching thread.
   */
-	private static void createAndShowGUI() {
+	public static void createAndShowGUI() {
      //Create and set up the window.
 
      //Create and set up the content pane.
@@ -171,6 +251,66 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
      //Display the window.
 		frame.setVisible(true);
 	}
+	
+    public class createNewPlayerGUI extends JFrame implements ActionListener {
+    	
+    	JButton create;
+    	JTextField playerName;
+    	JTextField playerPosition;
+    	Team t;
+    	DefaultListModel<String> mode;
+    	public createNewPlayerGUI(String title, Team team, DefaultListModel<String> model) {
+    		super(title);
+    		
+    		setLayout(new GridBagLayout());
+    		t = team;
+    		mode = model;
+    		GridBagConstraints gc = new GridBagConstraints();
+    		gc.anchor = gc.CENTER;
+    		gc.gridx=0;
+    		gc.gridy=0;
+    		gc.fill = GridBagConstraints.NONE;
+    		gc.insets = new Insets(0, 0, 0, 5);
+    		playerName = new JTextField("Player");
+    		playerPosition = new JTextField("Position");
+    		create = new JButton("Create Player");
+    		gc.ipady = 7;
+    		gc.ipadx = 50;
+    		add(playerName, gc);
+    		gc.insets = new Insets(20, 0, 0, 5);
+    		gc.gridx=1;
+    		gc.gridy = 1;
+    		gc.ipady = 0;
+    		gc.ipadx = 0;
+    		add(create, gc);
+    		
+    		gc.gridy = 1;
+    		gc.gridx = 0;
+    		gc.ipadx = 40;
+    		gc.ipady = 7;
+    		add(playerPosition, gc);
+    		create.addActionListener(this);
+    		
+    		
+    		setSize(400, 400);
+    		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    	}
+    	public void createAndShowGUI(Team t) {
+    		JFrame frame = new createNewPlayerGUI("Create New Team", t, mode);
+    		
+    		frame.setVisible(true);
+    	}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == create) {
+				mode.addElement(playerName.getText());
+				t.addPlayer(playerName.getText(), playerPosition.getText());
+				dispose();
+			}
+			
+		}
+    }
+	
 	
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
