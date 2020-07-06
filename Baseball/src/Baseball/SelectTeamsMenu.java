@@ -23,6 +23,8 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
     JButton select2;
     JButton createNewTeam;
     JButton playerSelectionButton;
+    Team t1;
+    Team t2;
     //static XSSFWorkbook workbook;
     static Commands commands = new Commands();
     
@@ -110,6 +112,7 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
 		add(createNewTeam, gc);
 		
 		playerSelectionButton = new JButton("Choose players");
+		playerSelectionButton.addActionListener(this);
 		gc.gridx = 2;
 		gc.gridy = 3;
 		gc.weighty = 0.25;
@@ -125,10 +128,12 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
 		if (arg0.getSource() == select) {
 			String team = (String) list.getSelectedValue();
 			team1.setText(team);
+			t1 = new Team(team1.getText());
 		}
 		else if (arg0.getSource() == select2) {
 			String team = (String) list.getSelectedValue();
 			team2.setText(team);
+			t2 = new Team(team2.getText());
 		}
 		else if (arg0.getSource() == createNewTeam) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -140,10 +145,11 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
 		else if (arg0.getSource() == playerSelectionButton) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					new SelectPlayersMenu().createAndShowGUI();
+					System.out.println("run");
+					dispose();
+					new SelectPlayersMenu(t1, t2).createAndShowGUI();
 				}
 			});
-			dispose();
 		}
 		
 	}
@@ -183,7 +189,7 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
      * this method should be invoked from the
      * event-dispatching thread.
      */
-    private static void createAndShowGUI() {
+    public static void createAndShowGUI() {
         //Create and set up the window.
  
         //Create and set up the content pane.

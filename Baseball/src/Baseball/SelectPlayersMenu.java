@@ -33,8 +33,8 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
     JScrollPane listScrollPane2;
     JLabel team1;
     JLabel team2;
-    Team teamA;
-    Team teamB;
+    static Team teamA;
+    static Team teamB;
     JButton selectPlayerTeam1;
     JButton selectPlayerTeam2;
     JButton createNewPlayerTeam1;
@@ -44,18 +44,19 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
     String[] arrayTeam2 = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
     JScrollPane listScrollPaneTeamA;
     JScrollPane listScrollPaneTeamB;
+    JButton next;
 	
-	public SelectPlayersMenu() {
+	public SelectPlayersMenu(Team team1, Team team2) {
 		super("Select Players");
 		setLayout(new GridBagLayout());
-		teamA = new Team("Black");
-		teamB = new Team("White");
+		teamA = team1;
+		teamB = team2;
 		GridBagConstraints gc = new GridBagConstraints();
 		
 		listModelTeam1 = new DefaultListModel<String>();
         listModelTeam2 = new DefaultListModel<String>();
         
-        JLabel setupTeam1 = new JLabel("Enter information for Team Black");
+        JLabel setupTeam1 = new JLabel("Enter information for Team " + teamA.getTeamName());
         gc.fill = GridBagConstraints.NONE;
         gc.insets = new Insets(10, 12, 0, 0);
         gc.anchor = gc.NORTHWEST;
@@ -106,7 +107,7 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
         
         gc.insets = new Insets(10, 12, 0, 0);
         gc.anchor = gc.NORTHWEST;
-		JLabel setupTeam2 = new JLabel("Enter information for Team White");
+		JLabel setupTeam2 = new JLabel("Enter information for Team " + teamB.getTeamName());
 		gc.gridx = 0;
 		gc.gridy = 4;
 		gc.weighty = 0.01;
@@ -246,7 +247,7 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
      //Create and set up the window.
 
      //Create and set up the content pane.
-		JFrame frame = new SelectPlayersMenu();
+		JFrame frame = new SelectPlayersMenu(teamA, teamB);
 
      //Display the window.
 		frame.setVisible(true);
