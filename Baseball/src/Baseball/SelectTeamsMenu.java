@@ -147,7 +147,7 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
 				public void run() {
 					System.out.println("run");
 					dispose();
-					new SelectPlayersMenu(t1, t2).createAndShowGUI();
+					new SelectPlayersMenu().createAndShowGUI();
 				}
 			});
 		}

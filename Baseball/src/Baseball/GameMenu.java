@@ -32,6 +32,7 @@ public class GameMenu extends JFrame {
         whitesox.addToLineup(1);
 		setSize(500, 500);
 		createWindow();
+		runInning(0, 0);
 
 	}
 
@@ -86,6 +87,14 @@ public class GameMenu extends JFrame {
         setResizable(false);
 		
 	}
+	
+    public static void createAndShowGUI() {
+        //Create and set up the window.
+ 
+        //Create and set up the content pane.
+        JFrame frame = new GameMenu();
+        //Display the window.
+    }
 	
 	public static void main(String [] args) {
 		GameMenu m = new GameMenu();

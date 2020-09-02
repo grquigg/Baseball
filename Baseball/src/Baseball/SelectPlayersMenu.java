@@ -46,11 +46,11 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
     JScrollPane listScrollPaneTeamB;
     JButton next;
 	
-	public SelectPlayersMenu(Team team1, Team team2) {
+	public SelectPlayersMenu() {
 		super("Select Players");
 		setLayout(new GridBagLayout());
-		teamA = team1;
-		teamB = team2;
+		teamA = new Team("Team A");
+		teamB = new Team("Team B");
 		GridBagConstraints gc = new GridBagConstraints();
 		
 		listModelTeam1 = new DefaultListModel<String>();
@@ -197,6 +197,15 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
         gc.ipadx = 200;
         add(listScrollPaneTeamB, gc);
         
+        startGameButton = new JButton("Start Game!");
+        startGameButton.addActionListener(this);
+        gc.gridx = 2;
+        gc.gridy = 8;
+        gc.anchor = gc.NORTH;
+        gc.gridheight = 1;
+        gc.ipadx = 50;
+        add(startGameButton, gc);
+        
 		setSize(900, 500);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -234,6 +243,14 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 			String player = listModelLineupB.get(index).charAt(0) + " " + listPlayersTeam2.getSelectedValue();
 			System.out.println(index);
 			listModelLineupB.set(index, player);
+		} else if (e.getSource() == startGameButton) {
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					System.out.println("run");
+					dispose();
+					new GameMenu();
+				}
+			});
 		}
 	}
 	
@@ -247,7 +264,7 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
      //Create and set up the window.
 
      //Create and set up the content pane.
-		JFrame frame = new SelectPlayersMenu(teamA, teamB);
+		JFrame frame = new SelectPlayersMenu();
 
      //Display the window.
 		frame.setVisible(true);
