@@ -9,48 +9,78 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class Game extends JPanel implements ActionListener{
-	
-	public enum GameState{SelectTeamsMenu, SelectPlayerMenu, GameMenu}
+public class Game extends JPanel {
+	/*this class is essentially designed as a way for the application to have control over which 
+	 * GUIs are displayed and which ones are not. If we have each GUI calling each other GUI then there's
+	 * no guarantee that the program won't terminate early, etc, etc. 
+	 */
+	public enum GameState{SelectTeamsMenu, SelectPlayersMenu, GameMenu}
 	
 	public GameState state;
-	public JPanel cards;
-	JLabel label1;
-	JLabel label2;
-	JLabel label3;
-	JButton next;
+	public Team teamA;
+	public Team teamB;
 	
 	public Game(String title) {
 		super();
 		state = GameState.SelectTeamsMenu;
-		label1 = new JLabel("Select Teams Menu");
-		label2 = new JLabel("Select Players Menu");
-		label3 = new JLabel("Game Menu");
-		next = new JButton("Next state");
+		start();
 	}
 	
 	public void start() {
-		//currentMenu.createAndShowGUI();
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                SelectTeamsMenu.createAndShowGUI();
+            }
+        });
 	}
-	
 	public void onUpdate() {
-		
+		switch(state) {
+		case SelectPlayersMenu:
+	        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
+	                SelectPlayersMenu.createAndShowGUI();
+	            }
+	        });
+	        break;
+		case GameMenu:
+	        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
+	                GameMenu.createAndShowGUI();
+	            }
+	        });
+		default:
+			break;
+		}
 	}
 	
-	public void changeStates() {
-		
+	public void setTeamA(Team x) {
+		teamA = x;
 	}
 	
+	public void setTeamB(Team x) {
+		teamB = x;
+	}
+	
+	public Team getTeamA() {
+		return teamA;
+	}
+	
+	public Team getTeamB() {
+		return teamB;
+	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void switchToSelectPlayerState() {
+		state = GameState.SelectPlayersMenu;
+		onUpdate();
+	}
+	
+	public void switchToGameMenuState() {
+		state = GameState.GameMenu;
+		onUpdate();
 	}
 	
 	public static void main(String[] args) {
 		Game g = new Game("Title");
-		g.start();
 	}
 
 }
