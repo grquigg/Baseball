@@ -13,6 +13,10 @@ public class Game extends JPanel {
 	/*this class is essentially designed as a way for the application to have control over which 
 	 * GUIs are displayed and which ones are not. If we have each GUI calling each other GUI then there's
 	 * no guarantee that the program won't terminate early, etc, etc. 
+	 * 
+	 * tl:dr, this class should be the central unit of control over the entire application. 
+	 * All of the relevant information about save data, file storage etc
+	 * should be stored here. 
 	 */
 	public enum GameState{SelectTeamsMenu, SelectPlayersMenu, GameMenu}
 	

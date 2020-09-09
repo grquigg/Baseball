@@ -25,6 +25,7 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
     JButton playerSelectionButton;
     Team t1;
     Team t2;
+    Game game;
     //static XSSFWorkbook workbook;
     static Commands commands = new Commands();
     
@@ -145,9 +146,9 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
 		else if (arg0.getSource() == playerSelectionButton) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					System.out.println("run");
+					//System.out.println("run");
+					new SelectPlayersMenu(t1, t2).createAndShowGUI(t1, t2);
 					dispose();
-					new SelectPlayersMenu().createAndShowGUI();
 				}
 			});
 		}

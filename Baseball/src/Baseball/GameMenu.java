@@ -14,22 +14,22 @@ import javax.swing.SwingWorker;
 public class GameMenu extends JFrame {
 	
 	JTextArea textArea;
-	Team whitesox;
-	Team tigers;
+	Team teamA;
+	Team teamB;
 	Inning first;
-	public GameMenu() {
+	public GameMenu(Team a, Team b) {
 		super();
         
-        whitesox = new Team("White Sox");
-        tigers = new Team("Tigers");
+        teamA = a;
+        teamB = b;
         Pitcher p = new Pitcher("Correa", "Pitcher");
-        tigers.addPlayer(p);
-        tigers.addToRotation(0);
-        first = new Inning(whitesox, tigers, 0, 0, tigers.getPitcher(0));
-        whitesox.addPlayer("Hernandez", "Catcher");
-        whitesox.addPlayer("Jake", "Left Fielder");
-        whitesox.addToLineup(0);
-        whitesox.addToLineup(1);
+        teamA.addPlayer(p);
+        teamA.addToRotation(0);
+        first = new Inning(teamB, teamA, 0, 0, teamA.getPitcher(0));
+        teamB.addPlayer("Hernandez", "Catcher");
+        teamB.addPlayer("Jake", "Left Fielder");
+        teamB.addToLineup(0);
+        teamB.addToLineup(1);
 		setSize(500, 500);
 		createWindow();
 		runInning(0, 0);
@@ -88,18 +88,13 @@ public class GameMenu extends JFrame {
 		
 	}
 	
-    public static void createAndShowGUI() {
+    public static void createAndShowGUI(Team t1, Team t2) {
         //Create and set up the window.
  
         //Create and set up the content pane.
-        JFrame frame = new GameMenu();
+        JFrame frame = new GameMenu(t1, t2);
         //Display the window.
     }
-	
-	public static void main(String [] args) {
-		GameMenu m = new GameMenu();
-		m.runInning(0, 0);
-	}
 	
 }
 

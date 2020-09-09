@@ -46,11 +46,11 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
     JScrollPane listScrollPaneTeamB;
     JButton next;
 	
-	public SelectPlayersMenu() {
+	public SelectPlayersMenu(Team a, Team b) {
 		super("Select Players");
+		teamA = a;
+		teamB = b;
 		setLayout(new GridBagLayout());
-		teamA = new Team("Team A");
-		teamB = new Team("Team B");
 		GridBagConstraints gc = new GridBagConstraints();
 		
 		listModelTeam1 = new DefaultListModel<String>();
@@ -248,7 +248,7 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 				public void run() {
 					System.out.println("run");
 					dispose();
-					new GameMenu();
+					new GameMenu(teamA, teamB);
 				}
 			});
 		}
@@ -259,12 +259,14 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
   * Create the GUI and show it.  For thread safety,
   * this method should be invoked from the
   * event-dispatching thread.
+	 * @param t2 
+	 * @param t1 
   */
-	public static void createAndShowGUI() {
+	public static void createAndShowGUI(Team a, Team b) {
      //Create and set up the window.
 
      //Create and set up the content pane.
-		JFrame frame = new SelectPlayersMenu();
+		JFrame frame = new SelectPlayersMenu(a, b);
 
      //Display the window.
 		frame.setVisible(true);
@@ -329,14 +331,4 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 		}
     }
 	
-	
-    public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
 }
