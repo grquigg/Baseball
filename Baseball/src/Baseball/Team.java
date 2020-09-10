@@ -110,7 +110,7 @@ public class Team extends XSSFObject
     }
     public int returnRoster()
     {
-        return roster.size() + 1;
+        return roster.size();
     }
     public Player getPlayerFromLineup(int x)
     {
@@ -120,6 +120,17 @@ public class Team extends XSSFObject
     {
         return roster.get(x);
     }
+    public int getPlayerIndexInRoster(String x) {
+    	System.out.println(x);
+    	for (int i = 0; i < roster.size(); i++) {
+    		if(roster.get(i).getName().equals(x)) {
+    			System.out.println("Match");
+    			return i;
+    		}
+    	}
+    	return 10;
+    }
+    
     public String getName(int x)
     {
         return lineup.get(x).getName();
@@ -246,6 +257,8 @@ public class Team extends XSSFObject
             else
                 return newPlayer;
     }
+    
+    //add method for finding the index of a player
     public Pitcher getPitcher(int x)
     {
         return (Pitcher) pitching.get(x);
@@ -401,25 +414,6 @@ public class Team extends XSSFObject
         return index;
     }
     
-	//indexSplit seems to be redundant. I'm not 100% about the documentation for the XSSFSpreadsheet, but we could write something
-	/*more along the lines of this:
-	 * while (the first cell in the new row is not blank) {
-	 * 		call the method to have the program read data from the spreadsheet and store it in the player's values
-	 * }
-	 * row = next row
-	 * while (the first cell in the new row is not blank) {
-	 * 		call the method to have the program read data from the spreadsheet and store it
-	 * }
-	 * 
-	 * Writing the code like this makes life easier for two reasons. The first is that it's a step forward in the right direction of getting a 
-	 * generic XSSFRow reader that simply given the contents of a row and an index turns that data into an array and returns it. This is extremely useful in the type of data analysis
-	 * projects that are the crux of your foundation as a programmer. 
-	 * 
-	 * The second reason that we want to do this is to get rid of rather repetitive and redundant code that makes things feel clunky and rather poorly thought out.
-	 * The code called in the first half of the for loop and the code in the second for loop essentially do the exact same thing in that they read data from a file until 
-	 * they encounter a blank row. 
-	 * 
-	 */
 	public void Unpack_data(XSSFSheet sheet, int split) {
 		// TODO Auto-generated method stub
         Iterator < Row > rowIterator = sheet.iterator();

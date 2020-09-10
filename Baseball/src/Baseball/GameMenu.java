@@ -24,12 +24,13 @@ public class GameMenu extends JFrame {
         teamB = b;
         Pitcher p = new Pitcher("Correa", "Pitcher");
         teamA.addPlayer(p);
-        teamA.addToRotation(0);
+        
+        teamA.addToRotation(teamA.returnRoster()-1); //this number cannot be zero
         first = new Inning(teamB, teamA, 0, 0, teamA.getPitcher(0));
-        teamB.addPlayer("Hernandez", "Catcher");
-        teamB.addPlayer("Jake", "Left Fielder");
-        teamB.addToLineup(0);
-        teamB.addToLineup(1);
+//        teamB.addPlayer("Hernandez", "Catcher");
+//        teamB.addPlayer("Jake", "Left Fielder");
+//        teamB.addToLineup(0);
+//        teamB.addToLineup(1);
 		setSize(500, 500);
 		createWindow();
 		runInning(0, 0);

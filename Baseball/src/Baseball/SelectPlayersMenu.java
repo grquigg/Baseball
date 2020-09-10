@@ -232,17 +232,44 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 				}
 			});
 		}
+		//user should be prevented from adding a player to position 3 when position 2 is not filled
 		else if(e.getSource() == selectPlayerTeam1) {
 			int index = listLineup1.getSelectedIndex();
-			String player = listModelLineupA.get(index).charAt(0) + " " + listPlayersTeam1.getSelectedValue();
-			System.out.println(index);
-			listModelLineupA.set(index, player);
+			if(index > 0) {
+				if(!listModelLineupA.get(index-1).equals(Integer.toString(index))) {
+					String player = listModelLineupA.get(index).charAt(0) + " " + listPlayersTeam1.getSelectedValue();
+					listModelLineupA.set(index, player);
+					int x = teamA.getPlayerIndexInRoster(listPlayersTeam1.getSelectedValue());
+					teamA.addToLineup(x);
+				} else {
+					System.out.println("Error");
+				}
+			} else {
+				String player = listModelLineupA.get(index).charAt(0) + " " + listPlayersTeam1.getSelectedValue();
+				listModelLineupA.set(index, player);
+				int x = teamA.getPlayerIndexInRoster(listPlayersTeam1.getSelectedValue());
+				teamA.addToLineup(x);
+			}
 		}
 		else if(e.getSource() == selectPlayerTeam2) {
 			int index = listLineup2.getSelectedIndex();
-			String player = listModelLineupB.get(index).charAt(0) + " " + listPlayersTeam2.getSelectedValue();
-			System.out.println(index);
-			listModelLineupB.set(index, player);
+			if (index > 0) {
+				if(!listModelLineupB.get(index-1).equals(Integer.toString(index))) {
+					String player = listModelLineupB.get(index).charAt(0) + " " + listPlayersTeam2.getSelectedValue();
+					System.out.println(index);
+					listModelLineupB.set(index, player);
+					int x = teamB.getPlayerIndexInRoster(listPlayersTeam2.getSelectedValue());
+					teamB.addToLineup(x);
+				} else {
+					System.out.println("Error");
+				}
+			} else {
+				String player = listModelLineupB.get(index).charAt(0) + " " + listPlayersTeam2.getSelectedValue();
+				//System.out.println(index);
+				listModelLineupB.set(index, player);
+				int x = teamB.getPlayerIndexInRoster(listPlayersTeam2.getSelectedValue());
+				teamB.addToLineup(x);
+			}
 		} else if (e.getSource() == startGameButton) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
