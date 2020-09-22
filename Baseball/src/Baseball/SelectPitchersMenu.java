@@ -196,8 +196,12 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 		}
 		//user should be prevented from adding a player to position 3 when position 2 is not filled
 		else if(e.getSource() == selectPitcherTeam1) {
+			int index = listPitchersTeam1.getSelectedIndex();
+			String player = listModelTeam1.get(index).charAt(0) + " " + listPitchersTeam1.getSelectedValue();
 		}
 		else if(e.getSource() == selectPitcherTeam2) {
+			int index = listPitchersTeam2.getSelectedIndex();
+			String player = listModelTeam2.get(index).charAt(0) + " " + listPitchersTeam2.getSelectedValue();
 		} else if (e.getSource() == startGameButton) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
@@ -243,12 +247,11 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
     	JTextField playerPosition;
     	Team t;
     	DefaultListModel<String> mode;
-    	public newGUI(String title, Team team, DefaultListModel<String> model) {
+    	public newGUI(String title, Team team, DefaultListModel<String> list) {
     		super(title);
-    		
+    		mode = list;
     		setLayout(new GridBagLayout());
     		t = team;
-    		mode = model;
     		GridBagConstraints gc = new GridBagConstraints();
     		gc.anchor = gc.CENTER;
     		gc.gridx=0;
@@ -256,30 +259,24 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
     		gc.fill = GridBagConstraints.NONE;
     		gc.insets = new Insets(0, 0, 0, 5);
     		playerName = new JTextField("Player");
-    		playerPosition = new JTextField("Position");
-    		create = new JButton("Create Player");
+    		create = new JButton("Create Pitcher");
     		gc.ipady = 7;
     		gc.ipadx = 50;
     		add(playerName, gc);
-    		gc.insets = new Insets(20, 0, 0, 5);
+    		gc.insets = new Insets(0, 0, 0, 5);
     		gc.gridx=1;
-    		gc.gridy = 1;
+    		gc.gridy = 0;
     		gc.ipady = 0;
     		gc.ipadx = 0;
     		add(create, gc);
     		
-    		gc.gridy = 1;
-    		gc.gridx = 0;
-    		gc.ipadx = 40;
-    		gc.ipady = 7;
-    		add(playerPosition, gc);
     		create.addActionListener(this);
     		
     		
-    		setSize(400, 400);
+    		setSize(300, 100);
     		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     	}
-    	public void createAndShowGUI(Team t) {
+		public void createAndShowGUI(Team t) {
     		JFrame frame = new newGUI("Create New Team", t, mode);
     		
     		frame.setVisible(true);
@@ -288,7 +285,7 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == create) {
 				mode.addElement(playerName.getText());
-				t.addPlayer(playerName.getText(), playerPosition.getText());
+				t.addPlayer(playerName.getText(), "Pitcher");
 				dispose();
 			}
 			

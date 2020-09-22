@@ -195,78 +195,81 @@ public class Inning
     
     public String getNextPlay() {
     	String response = "";
-    	if ((order <= team1.returnLineup()) && (outs < 3)) {
-    		plays.add(new Plays(team1.getPlayerFromLineup(order)));
-    		plays.get(count).newAction();
-    		String temp = plays.get(count).mostRecent();
-    		
-    		if (temp.equals("Single"))
-    		{
-    			response = team1.getName(order) + " has singled. ";
-                pitcher.incrementPitch(6);
-                response += baseRunner(1, true);
-    		}
-    		else if(temp.equals("Double")) {
-    			response = team1.getName(order) + " has doubled. ";
-    			pitcher.incrementPitch(6);
-    			response += baseRunner(2, true);
-    		}
-    		else if (temp.equals("Triple")) {
-    			response = team1.getName(order) + " has tripled. ";
-    			pitcher.incrementPitch(6);
-    			response += baseRunner(3, true);
-    		}
-    		else if (temp.equals("Home Run")) {
-    			response = team1.getName(order) + " has hit a home run! ";
-    			pitcher.incrementPitch(6);
-    			response += baseRunner(4, true);
-    		}
-            else if (temp.equals("Strikeout"))
-            {
-                response = team1.getName(order) + " has struck out. ";
-                pitcher.incrementPitch(7);
-                outs++;
-            }
-            else if (temp.equals("Flyout")) {
-            	if (outs < 2) {
-            		if (bases[2]) {
-            			response = team1.getName(order) + " has hit a sacrifice fly. ";
-            			response += baseRunner(1, false);
-            		}
-            		else {
-            			response = team1.getName(order) + " has flied out. ";
-            			response += baseRunner(0, false);
-            		}
-            	}
-            	else {
-            		response = team1.getName(order) + " has flied out. ";
-            	}
-        		pitcher.incrementPitch(9);
-        		outs++;
-            }
-            else if (temp.equals("Groundout"))
-            {
-                response = team1.getName(order) + " grounds out. ";
-                pitcher.incrementPitch(10);
-                if (outs < 2) {
-                	response += baseRunner(1, false);
-                }
-                outs++;
-            }
-            else if (temp.equals("Walk")) {
-            	response = team1.getName(order) + " has walked. ";
-                pitcher.incrementPitch(8);
-                response += baseRunner(1, true);
-            }
-    		response += outs + " out.";
-    		order = (order + 1) % team1.returnLineup();
-    		return response;
-    		
+    	if(team1.returnLineup() > 0) {
+	    	if ((order <= team1.returnLineup()) && (outs < 3)) {
+	    		plays.add(new Plays(team1.getPlayerFromLineup(order)));
+	    		plays.get(count).newAction();
+	    		String temp = plays.get(count).mostRecent();
+	    		
+	    		if (temp.equals("Single"))
+	    		{
+	    			response = team1.getName(order) + " has singled. ";
+	                pitcher.incrementPitch(6);
+	                response += baseRunner(1, true);
+	    		}
+	    		else if(temp.equals("Double")) {
+	    			response = team1.getName(order) + " has doubled. ";
+	    			pitcher.incrementPitch(6);
+	    			response += baseRunner(2, true);
+	    		}
+	    		else if (temp.equals("Triple")) {
+	    			response = team1.getName(order) + " has tripled. ";
+	    			pitcher.incrementPitch(6);
+	    			response += baseRunner(3, true);
+	    		}
+	    		else if (temp.equals("Home Run")) {
+	    			response = team1.getName(order) + " has hit a home run! ";
+	    			pitcher.incrementPitch(6);
+	    			response += baseRunner(4, true);
+	    		}
+	            else if (temp.equals("Strikeout"))
+	            {
+	                response = team1.getName(order) + " has struck out. ";
+	                pitcher.incrementPitch(7);
+	                outs++;
+	            }
+	            else if (temp.equals("Flyout")) {
+	            	if (outs < 2) {
+	            		if (bases[2]) {
+	            			response = team1.getName(order) + " has hit a sacrifice fly. ";
+	            			response += baseRunner(1, false);
+	            		}
+	            		else {
+	            			response = team1.getName(order) + " has flied out. ";
+	            			response += baseRunner(0, false);
+	            		}
+	            	}
+	            	else {
+	            		response = team1.getName(order) + " has flied out. ";
+	            	}
+	        		pitcher.incrementPitch(9);
+	        		outs++;
+	            }
+	            else if (temp.equals("Groundout"))
+	            {
+	                response = team1.getName(order) + " grounds out. ";
+	                pitcher.incrementPitch(10);
+	                if (outs < 2) {
+	                	response += baseRunner(1, false);
+	                }
+	                outs++;
+	            }
+	            else if (temp.equals("Walk")) {
+	            	response = team1.getName(order) + " has walked. ";
+	                pitcher.incrementPitch(8);
+	                response += baseRunner(1, true);
+	            }
+	    		response += outs + " out.";
+	    		order = (order + 1) % team1.returnLineup();
+	    		return response;
+	    		
+	    	}
+	    	bases[0] = false;
+	    	bases[1] = false;
+	    	bases[2] = false;
+	    	return "DONE";
     	}
-    	bases[0] = false;
-    	bases[1] = false;
-    	bases[2] = false;
-    	return "DONE";
+    	return "NONE";
     }
     
     /**
