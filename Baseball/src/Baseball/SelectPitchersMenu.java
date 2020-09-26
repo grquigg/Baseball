@@ -17,6 +17,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import java.util.ArrayList;
+
 import Baseball.SelectPlayersMenu.createNewPlayerGUI;
 
 public class SelectPitchersMenu extends JFrame implements ActionListener, ListSelectionListener {
@@ -40,16 +42,25 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
     JLabel pitcherForTeam1;
     JLabel pitcherForTeam2;
 	
-	public SelectPitchersMenu() {
+	public SelectPitchersMenu(Team x, Team y) {
 		super("Select Pitchers");
-		teamA = new Team("a");
-		teamB = new Team("b");
+		teamA = x;
+		teamB = y;
+		ArrayList<Pitcher> teamAPitchers = teamA.getRotation();
+		ArrayList<Pitcher> teamBPitchers = teamB.getRotation();
 		setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
 		
 		listModelTeam1 = new DefaultListModel<String>();
         listModelTeam2 = new DefaultListModel<String>();
-        
+        for (int i = 0; i < teamAPitchers.size(); i++) {
+        	Pitcher p = teamAPitchers.get(i);
+        	listModelTeam1.addElement(p.getName());
+        }
+        for (int j = 0; j < teamBPitchers.size(); j++) {
+        	Pitcher p = teamBPitchers.get(j);
+        	listModelTeam2.addElement(p.getName());
+        }
         JLabel setupTeam1 = new JLabel("Enter information for Team " + teamA.getTeamName());
         gc.fill = GridBagConstraints.NONE;
         gc.insets = new Insets(10, 12, 0, 0);
@@ -221,11 +232,11 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 	 * @param t2 
 	 * @param t1 
   */
-	public static void createAndShowGUI() {
+	public static void createAndShowGUI(Team a, Team b) {
      //Create and set up the window.
 
      //Create and set up the content pane.
-		JFrame frame = new SelectPitchersMenu();
+		JFrame frame = new SelectPitchersMenu(a, b);
 
      //Display the window.
 		frame.setVisible(true);
@@ -233,11 +244,6 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new SelectPitchersMenu().createAndShowGUI();
-            }
-        });
     }
     
     public class newGUI extends JFrame implements ActionListener {

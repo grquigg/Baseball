@@ -75,6 +75,11 @@ public class Team extends XSSFObject
     public void addPlayer(String name, String position)
     {
         roster.add(new Player(name, position));
+        if(position.contentEquals("Pitcher")) {
+        	int x = getPlayerIndexInRoster(name);
+        	System.out.println(x);
+        	addToRotation(new Pitcher(name, position));
+        }
     }
     public void addPlayer(Player p)
     {
@@ -131,6 +136,9 @@ public class Team extends XSSFObject
     	return 10;
     }
     
+    public ArrayList<Pitcher> getRotation() {
+    	return pitching;
+    }
     public String getName(int x)
     {
         return lineup.get(x).getName();
