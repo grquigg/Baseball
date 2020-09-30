@@ -250,6 +250,22 @@ public class Team extends XSSFObject
             else
                 return newPitch;
     }
+//    public int findPitcherIndex(String x)
+//    {
+//        int newPitch = 0;
+//        for (Player p: pitching)
+//        {
+//            if (p.getName().equals(x))
+//            {
+//                newPitch = (Pitcher) p;
+//            }
+//        }
+//        if (newPitch == null)
+//            return null;
+//            else
+//                return newPitch;
+//    }
+//    
     public Player findPlayer(String x)
     {
         Player newPlayer = null;
@@ -392,6 +408,9 @@ public class Team extends XSSFObject
                 }
             reader.nextLine();
         }
+    }
+    public void setStartingPitcher(int x) {
+    	starter = pitching.get(x);
     }
     public void setStartingPitcher()
     {

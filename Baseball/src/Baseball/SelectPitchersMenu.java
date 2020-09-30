@@ -164,12 +164,17 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
         gc.weightx = 1;
         add(lab, gc);
         
+        pitcherForTeam1 = new JLabel();
+        gc.gridy = 2;
+        add(pitcherForTeam1, gc);
         JLabel lab2 = new JLabel("Team 2's starting pitcher");
         gc.ipadx = 0;
 		gc.gridx = 2;
 		gc.gridy = 4;
 		add(lab2, gc);
-        
+        pitcherForTeam2 = new JLabel();
+        gc.gridy = 6;
+        add(pitcherForTeam2, gc);
         startGameButton = new JButton("Start Game!");
         startGameButton.addActionListener(this);
         gc.gridx = 2;
@@ -208,11 +213,13 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 		//user should be prevented from adding a player to position 3 when position 2 is not filled
 		else if(e.getSource() == selectPitcherTeam1) {
 			int index = listPitchersTeam1.getSelectedIndex();
-			String player = listModelTeam1.get(index).charAt(0) + " " + listPitchersTeam1.getSelectedValue();
+			String pitcher = listPitchersTeam1.getSelectedValue();
+			pitcherForTeam1.setText(pitcher);
 		}
 		else if(e.getSource() == selectPitcherTeam2) {
 			int index = listPitchersTeam2.getSelectedIndex();
-			String player = listModelTeam2.get(index).charAt(0) + " " + listPitchersTeam2.getSelectedValue();
+			String pitcher = listPitchersTeam2.getSelectedValue();
+			pitcherForTeam2.setText(pitcher);
 		} else if (e.getSource() == startGameButton) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
