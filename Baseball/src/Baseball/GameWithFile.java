@@ -7,14 +7,15 @@ package Baseball;
  * @author (your name) 
  * @version (a version number or a date)
  */
-import java.io.*;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import org.apache.poi.EmptyFileException;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
 
 /*TO-DO

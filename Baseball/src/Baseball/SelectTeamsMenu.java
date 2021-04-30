@@ -1,17 +1,30 @@
 package Baseball;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.apache.poi.EmptyFileException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 
 public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelectionListener {
 	
@@ -29,8 +42,9 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
     //static XSSFWorkbook workbook;
     static Commands commands = new Commands();
     
-	public SelectTeamsMenu(String title) {
+	public SelectTeamsMenu(Game g, String title) {
 		super(title);
+		game = g;
 		setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
 //		workbook = new XSSFWorkbook();
@@ -42,12 +56,12 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
 //			e.printStackTrace();
 //		}
         listModel = new DefaultListModel();
-        listModel.addElement("Black");
-        listModel.addElement("White");
-//        int num = workbook.getNumberOfSheets();
-//        for (int i = 0; i < num; i++) {
-//        	listModel.addElement(workbook.getSheetAt(i).getSheetName());
-//        }
+        ArrayList<Team> teams = game.teamList;
+        int numTeams = teams.size();
+        for (int i = 0; i < numTeams; i++) {
+        	listModel.addElement(teams.get(i).getTeamName());
+        }
+
         //Create the list and put it in a scroll pane.
         list = new JList(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -128,13 +142,16 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getSource() == select) {
 			String team = (String) list.getSelectedValue();
+			System.out.println(list.getSelectedIndex());
 			team1.setText(team);
-			t1 = new Team(team1.getText());
+			t1 = game.teamList.get(list.getSelectedIndex());
+			game.setTeamA(t1);
 		}
 		else if (arg0.getSource() == select2) {
 			String team = (String) list.getSelectedValue();
 			team2.setText(team);
-			t2 = new Team(team2.getText());
+			t2 = game.teamList.get(list.getSelectedIndex());
+			game.setTeamB(t2);
 		}
 		else if (arg0.getSource() == createNewTeam) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -147,7 +164,7 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					//System.out.println("run");
-					new SelectPlayersMenu(t1, t2).createAndShowGUI(t1, t2);
+					game.switchToSelectPlayerState();
 					dispose();
 				}
 			});
@@ -190,25 +207,25 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
      * this method should be invoked from the
      * event-dispatching thread.
      */
-    public static void createAndShowGUI() {
+    public void createAndShowGUI() {
         //Create and set up the window.
  
         //Create and set up the content pane.
-        JFrame frame = new SelectTeamsMenu("Select Teams");
+        JFrame frame = new SelectTeamsMenu(game, "Select Teams");
  
         //Display the window.
         frame.setVisible(true);
     }
  
-    public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        //Schedule a job for the event-dispatching thread:
+//        //creating and showing this application's GUI.
+//        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                createAndShowGUI();
+//            }
+//        });
+//    }
 
     public class createNewTeamGUI extends JFrame implements ActionListener {
     	
@@ -248,6 +265,8 @@ public class SelectTeamsMenu extends JFrame implements ActionListener, ListSelec
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == create) {
 				listModel.addElement(field.getText());
+				Team t = new Team(field.getText());
+				game.addTeam(t);
 				dispose();
 			}
 			

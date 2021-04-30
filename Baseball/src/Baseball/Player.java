@@ -42,7 +42,8 @@ public class Player
         temp.add("Strikeout");
         temp.add("Groundout");
         temp.add("Flyout");
-        avg = (double) stats[1] / stats[2];
+        avg = 0.0;
+        System.out.println("Created players");
     }
     
     /**
@@ -54,6 +55,15 @@ public class Player
         return name;
     }
     
+    
+    public String toString() {
+    	String res = "";
+    	for (int i = 0; i < stats.length; i++) {
+    		res += stats[i] + ",";
+    	}
+		return res;
+    	
+    }
     /**
      * This method allows for the user to get the position of the player
      * @return the position of the player
@@ -141,6 +151,9 @@ public class Player
         temp.add(action);
     }
     
+    public void calculateAvg() {
+    	avg = (double) stats[1] / stats[2];
+    }
     /**
      * This method factors in the data of the player to the current pitcher of the game.
      * @param p - the pitcher who is throwing against the player

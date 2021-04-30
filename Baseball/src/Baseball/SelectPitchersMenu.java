@@ -31,8 +31,8 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
     JScrollPane listScrollPane2;
     JLabel team1;
     JLabel team2;
-    static Team teamA;
-    static Team teamB;
+    Team teamA;
+    Team teamB;
     JButton selectPitcherTeam1;
     JButton selectPitcherTeam2;
     JButton createNewPitcherTeam1;
@@ -41,9 +41,12 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
     JButton next;
     JLabel pitcherForTeam1;
     JLabel pitcherForTeam2;
+    Game game;
 	
-	public SelectPitchersMenu(Team x, Team y) {
+	public SelectPitchersMenu(Game g, Team x, Team y) {
 		super("Select Pitchers");
+		game = g;
+		System.out.println("Pitchers Menu");
 		teamA = x;
 		teamB = y;
 		ArrayList<Pitcher> teamAPitchers = teamA.getRotation();
@@ -215,17 +218,19 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 			int index = listPitchersTeam1.getSelectedIndex();
 			String pitcher = listPitchersTeam1.getSelectedValue();
 			pitcherForTeam1.setText(pitcher);
+			teamA.setStartingPitcher(index);
 		}
 		else if(e.getSource() == selectPitcherTeam2) {
 			int index = listPitchersTeam2.getSelectedIndex();
 			String pitcher = listPitchersTeam2.getSelectedValue();
 			pitcherForTeam2.setText(pitcher);
+			teamB.setStartingPitcher(index);
 		} else if (e.getSource() == startGameButton) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					System.out.println("run");
+					System.out.println("Run game menu");
+					game.switchToGameMenuState();
 					dispose();
-					new GameMenu(teamA, teamB);
 				}
 			});
 		}
@@ -239,14 +244,10 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 	 * @param t2 
 	 * @param t1 
   */
-	public static void createAndShowGUI(Team a, Team b) {
-     //Create and set up the window.
-
-     //Create and set up the content pane.
-		JFrame frame = new SelectPitchersMenu(a, b);
+	public void createAndShowGUI() {
 
      //Display the window.
-		frame.setVisible(true);
+		this.setVisible(true);
 	}
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:

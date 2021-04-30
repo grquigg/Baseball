@@ -11,17 +11,17 @@ import java.io.*;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.ArrayList;
-import org.apache.poi.ss.*;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.*;
-import org.apache.poi.xssf.*;
-import java.util.ArrayList;
-import java.util.Scanner;
+
 public class Team extends XSSFObject
 {
     private ArrayList<Player> roster = new ArrayList<Player>();
@@ -75,7 +75,7 @@ public class Team extends XSSFObject
     public void addPlayer(String name, String position)
     {
         roster.add(new Player(name, position));
-        if(position.contentEquals("Pitcher")) {
+        if(position.equals("Pitcher")) {
         	int x = getPlayerIndexInRoster(name);
         	System.out.println(x);
         	addToRotation(new Pitcher(name, position));
@@ -84,6 +84,9 @@ public class Team extends XSSFObject
     public void addPlayer(Player p)
     {
         roster.add(p);
+        if(p.getPosition().equals("Pitcher")) {
+        	addToRotation((Pitcher) p);
+        }
     }
     public void removePlayer(int x)
     {

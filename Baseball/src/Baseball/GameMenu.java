@@ -16,29 +16,70 @@ public class GameMenu extends JFrame {
 	JTextArea textArea;
 	Team teamA;
 	Team teamB;
+	int scoreTeamA;
+	int scoreTeamB;
 	Inning first;
-	public GameMenu(Team a, Team b) {
+	Game game;
+	boolean processing = true;
+	public GameMenu(Game g, Team a, Team b) {
 		super();
-        
+        game = g;
         teamA = a;
         teamB = b;
-        Pitcher p = new Pitcher("Correa", "Pitcher");
-        teamA.addPlayer(p);
-        
-        teamA.addToRotation(teamA.returnRoster()-1); //this number cannot be zero
-        first = new Inning(teamB, teamA, 0, 0, teamA.getPitcher(0));
-//        teamB.addPlayer("Hernandez", "Catcher");
-//        teamB.addPlayer("Jake", "Left Fielder");
-//        teamB.addToLineup(0);
-//        teamB.addToLineup(1);
+        scoreTeamA = 0;
+        scoreTeamB = 0;
+        first = new Inning(teamB, teamA, 0, 0, teamA.getStartingPitcher());
 		setSize(500, 500);
 		createWindow();
-		runInning(0, 0);
+		runGame(teamA, teamB);
+		
 
 	}
 
+	public void runGame(Team a, Team b) {
+		SwingWorker gameWorker = new SwingWorker<Void, String>() {
+
+			@Override
+			protected Void doInBackground() throws Exception {
+				//TO-DO: Add code for the temporary variables, such as score per inning, the current place in the batting order, etc.
+				for (int i = 0; i < 1; i++) {
+					processing = true;
+					System.out.println("running team A");
+					Inning aInning = new Inning(teamB, teamA, 0, scoreTeamB, teamA.getStartingPitcher());
+					runInning(i, 0, aInning);
+					while(processing) {
+						System.out.println("Wait...");
+						Thread.sleep(1000);
+					}
+					scoreTeamB = aInning.reportScore();
+					textArea.append("Score is " + teamA.getTeamName() + ": " + Integer.toString(scoreTeamA) + " to " + teamB.getTeamName() + ": " + Integer.toString(scoreTeamB) + "\n");
+					System.out.println("running team B");
+					Inning bInning = new Inning(teamA, teamB, 0, scoreTeamA, teamB.getStartingPitcher());
+					runInning(i, 0, bInning);
+					processing = true;
+					while(processing) {
+						System.out.println("Wait...");
+						Thread.sleep(1000);
+					}
+					scoreTeamA = bInning.reportScore();
+					textArea.append("Score is " + teamA.getTeamName() + ": " + Integer.toString(scoreTeamA) + " to " + teamB.getTeamName() + ": " + Integer.toString(scoreTeamB) + "\n");
+				}
+				return null;
+			}
+			
+			protected void done() {
+				System.out.println("Game is done");
+				System.out.println("Team A stats");
+				System.out.println(teamA.returnRoster());
+				System.out.println(game.teamA.getPlayer(0).toString());
+				game.WriteToFile();
+			}
+			
+		};
+		gameWorker.execute();
+	}
 	
-	public void runInning(int i, int o) {
+	public void runInning(int i, int o, Inning inn) {
 		int inning = i + 1;
 		SwingWorker inningWorker = new SwingWorker<Void, String>() {
 
@@ -46,7 +87,7 @@ public class GameMenu extends JFrame {
 			protected Void doInBackground() throws Exception {
 				String response = "";
 				while(response != "DONE") {
-					response = first.getNextPlay();
+					response = inn.getNextPlay();
 					System.out.println(response);
 					publish(response);
 					Thread.sleep(1000);
@@ -56,15 +97,19 @@ public class GameMenu extends JFrame {
 			}
 			
 			protected void process(List<String> list) {
+				processing = true;
 				System.out.println("call this function");
 				String play = list.get(list.size()-1);
-				textArea.append(play + "\n");
+				if(play != "DONE") {
+					textArea.append(play + "\n");
+				}
 				
 			}
 			
 			@Override
 			protected void done() {
-				
+				//Should print the score of the inning
+				processing = false;
 			}
 			
 		};
@@ -89,11 +134,11 @@ public class GameMenu extends JFrame {
 		
 	}
 	
-    public static void createAndShowGUI(Team t1, Team t2) {
+    public void createAndShowGUI() {
         //Create and set up the window.
  
         //Create and set up the content pane.
-        JFrame frame = new GameMenu(t1, t2);
+    	this.setVisible(true);
         //Display the window.
     }
 	

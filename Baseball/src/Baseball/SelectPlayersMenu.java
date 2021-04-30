@@ -33,8 +33,8 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
     JScrollPane listScrollPane2;
     JLabel team1;
     JLabel team2;
-    static Team teamA;
-    static Team teamB;
+    Team teamA;
+    Team teamB;
     JButton selectPlayerTeam1;
     JButton selectPlayerTeam2;
     JButton createNewPlayerTeam1;
@@ -45,9 +45,11 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
     JScrollPane listScrollPaneTeamA;
     JScrollPane listScrollPaneTeamB;
     JButton next;
+    Game game;
 	
-	public SelectPlayersMenu(Team a, Team b) {
+	public SelectPlayersMenu(Game g, Team a, Team b) {
 		super("Select Players");
+		game = g;
 		teamA = a;
 		teamB = b;
 		setLayout(new GridBagLayout());
@@ -56,6 +58,14 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 		listModelTeam1 = new DefaultListModel<String>();
         listModelTeam2 = new DefaultListModel<String>();
         
+        for (int i = 0; i < a.returnRoster(); i++) {
+        	String el = a.getPlayer(i).getName();
+        	listModelTeam1.addElement(el);
+        }
+        for (int j = 0; j < b.returnRoster(); j++) {
+        	String el = b.getPlayer(j).getName();
+        	listModelTeam2.addElement(el);
+        }
         JLabel setupTeam1 = new JLabel("Enter information for Team " + teamA.getTeamName());
         gc.fill = GridBagConstraints.NONE;
         gc.insets = new Insets(10, 12, 0, 0);
@@ -197,7 +207,7 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
         gc.ipadx = 200;
         add(listScrollPaneTeamB, gc);
         
-        startGameButton = new JButton("Start Game!");
+        startGameButton = new JButton("Select Pitchers");
         startGameButton.addActionListener(this);
         gc.gridx = 2;
         gc.gridy = 8;
@@ -274,8 +284,8 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					System.out.println("run");
+					game.switchToSelectPitchersMenu();
 					dispose();
-					new SelectPitchersMenu(teamA, teamB).createAndShowGUI(teamA, teamB);
 				}
 			});
 		}
@@ -289,14 +299,11 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 	 * @param t2 
 	 * @param t1 
   */
-	public static void createAndShowGUI(Team a, Team b) {
+	public void createAndShowGUI() {
      //Create and set up the window.
-
      //Create and set up the content pane.
-		JFrame frame = new SelectPlayersMenu(a, b);
-
      //Display the window.
-		frame.setVisible(true);
+		this.setVisible(true);
 	}
 	
     public class createNewPlayerGUI extends JFrame implements ActionListener {
@@ -352,6 +359,7 @@ public class SelectPlayersMenu extends JFrame implements ActionListener, ListSel
 			if (e.getSource() == create) {
 				mode.addElement(playerName.getText());
 				t.addPlayer(playerName.getText(), playerPosition.getText());
+				System.out.println(t.returnRoster());
 				dispose();
 			}
 			
