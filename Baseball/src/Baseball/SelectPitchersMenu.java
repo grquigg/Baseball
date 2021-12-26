@@ -1,5 +1,6 @@
 package Baseball;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -12,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -33,6 +35,8 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
     JLabel team2;
     Team teamA;
     Team teamB;
+    JTable j2;
+    JTable j;
     JButton selectPitcherTeam1;
     JButton selectPitcherTeam2;
     JButton createNewPitcherTeam1;
@@ -56,14 +60,34 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 		
 		listModelTeam1 = new DefaultListModel<String>();
         listModelTeam2 = new DefaultListModel<String>();
+        String[] columnNames = {"Name", "G", "GS", "W", "L", "SV", "ER", "H", "SO", "BB", "FO", "GO", "IP", "ERA"};
+        //get pitcher statistics
+        String[][] teamAData = new String[teamA.returnNumberOfPitchers()][14];
+        
         for (int i = 0; i < teamAPitchers.size(); i++) {
         	Pitcher p = teamAPitchers.get(i);
-        	listModelTeam1.addElement(p.getName());
+        	teamAData[i][0] = p.getName();
+        	p.displayPitchStats();
+        	for(int j = 1; j < 12; j++) {
+        		teamAData[i][j] = Integer.toString(p.getPitchStat(j-1));
+        	}
+        	teamAData[i][12] = Double.toString(p.getIP());
+        	teamAData[i][13] = Double.toString(p.getEra());
         }
-        for (int j = 0; j < teamBPitchers.size(); j++) {
-        	Pitcher p = teamBPitchers.get(j);
-        	listModelTeam2.addElement(p.getName());
+        
+        String[][] teamBData = new String[teamB.returnNumberOfPitchers()][14];
+        for (int i = 0; i < teamBPitchers.size(); i++) {
+        	Pitcher p = teamBPitchers.get(i);
+        	teamBData[i][0] = p.getName();
+        	p.displayPitchStats();
+        	for(int j = 1; j < 12; j++) {
+        		teamBData[i][j] = Integer.toString(p.getPitchStat(j-1));
+        	}
+        	teamBData[i][12] = Double.toString(p.getIP());
+        	teamBData[i][13] = Double.toString(p.getEra());
         }
+        
+        
         JLabel setupTeam1 = new JLabel("Enter information for Team " + teamA.getTeamName());
         gc.fill = GridBagConstraints.NONE;
         gc.insets = new Insets(10, 12, 0, 0);
@@ -74,6 +98,10 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 		gc.gridy = 0;
 		add(setupTeam1, gc);
 		
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.anchor = gc.EAST;
+        gc.ipadx = 0;
+		
 		JLabel label1 = new JLabel("Name");
 		gc.weighty = 0.03;
 		gc.gridy = 1;
@@ -81,18 +109,14 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 		add(label1, gc);
 		
 		//gc.anchor = gc.NORTHWEST;
-		gc.insets = new Insets(0, 10, 0, 0);
-		listPitchersTeam1 = new JList<String>(listModelTeam1);
-        listPitchersTeam1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listPitchersTeam1.setSelectedIndex(0);
-        listPitchersTeam1.setVisibleRowCount(5);
-        listScrollPane = new JScrollPane(listPitchersTeam1);
+		gc.insets = new Insets(10, 10, 0, 0);
         gc.gridy = 2;
-        gc.weighty = 0.05;
-        gc.ipadx = 100;
-        gc.gridwidth = 2;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        j = new JTable(teamAData, columnNames);
+        JScrollPane teamAscrollPane = new JScrollPane(j);
+        teamAscrollPane.setPreferredSize(new Dimension(600, 100));
+        add(teamAscrollPane, gc);
         //gc.fill = GridBagConstraints.HORIZONTAL;
-        add(listScrollPane, gc);
 		
         gc.fill = gc.NONE;
         gc.anchor = gc.EAST;
@@ -128,17 +152,15 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 		add(label2, gc);
 		
 		gc.anchor = gc.NORTHWEST;
-		listPitchersTeam2 = new JList<String>(listModelTeam2);
-        listPitchersTeam2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listPitchersTeam2.setSelectedIndex(0);
-        listPitchersTeam2.setVisibleRowCount(5);
-        listScrollPane2 = new JScrollPane(listPitchersTeam2);
         gc.gridy = 6;
         //gc.gridx = 0;
-        gc.weighty = 0.03;
-        gc.ipadx = 100;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+		j2 = new JTable(teamBData, columnNames);
+        JScrollPane teamBscrollPane = new JScrollPane(j2);
+        teamBscrollPane.setPreferredSize(new Dimension(600, 100));
         //gc.fill = GridBagConstraints.HORIZONTAL;
-        add(listScrollPane2, gc);
+        add(teamBscrollPane, gc);
+        //gc.fill = GridBagConstraints.HORIZONTAL;
         
         gc.fill = gc.NONE;
         gc.anchor = gc.EAST;
@@ -187,7 +209,7 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
         gc.ipadx = 50;
         add(startGameButton, gc);
         
-		setSize(600, 500);
+		setSize(1000, 500);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
@@ -215,16 +237,14 @@ public class SelectPitchersMenu extends JFrame implements ActionListener, ListSe
 		}
 		//user should be prevented from adding a player to position 3 when position 2 is not filled
 		else if(e.getSource() == selectPitcherTeam1) {
-			int index = listPitchersTeam1.getSelectedIndex();
-			String pitcher = listPitchersTeam1.getSelectedValue();
-			pitcherForTeam1.setText(pitcher);
-			teamA.setStartingPitcher(index);
+			String pitcher = j.getValueAt(j.getSelectedRow(), 0).toString();
+			pitcherForTeam1.setText(pitcher); //???
+			teamA.setStartingPitcher(j.getSelectedRow());
 		}
 		else if(e.getSource() == selectPitcherTeam2) {
-			int index = listPitchersTeam2.getSelectedIndex();
-			String pitcher = listPitchersTeam2.getSelectedValue();
+			String pitcher = j2.getValueAt(j2.getSelectedRow(), 0).toString();
 			pitcherForTeam2.setText(pitcher);
-			teamB.setStartingPitcher(index);
+			teamB.setStartingPitcher(j.getSelectedRow());
 		} else if (e.getSource() == startGameButton) {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {

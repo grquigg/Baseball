@@ -50,4 +50,14 @@ public class Pitcher extends Player
         era = (double) (pitcher[5] * 9) / ip;
         return era;
     }
+    public String toString() {
+    	System.out.println("Pitcher stats");
+    	String res = "";
+    	for (int i = 0; i < pitcher.length; i++) {
+    		res += pitcher[i] + ",";
+    	}
+    	res += Double.toString(ip) + ", " + Double.toString(era);
+		return res;
+    	
+    }
 }

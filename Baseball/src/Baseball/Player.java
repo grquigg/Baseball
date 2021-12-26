@@ -56,7 +56,7 @@ public class Player
     }
     
     
-    public String toString() {
+    public String toPlayerString() {
     	String res = "";
     	for (int i = 0; i < stats.length; i++) {
     		res += stats[i] + ",";

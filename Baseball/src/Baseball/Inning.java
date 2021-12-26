@@ -47,6 +47,7 @@ public class Inning
      */
     public String baseRunner(int n, boolean b) {
     	String resp = "";
+    	System.out.println(outs);
     	for (int i = 2; i >= 0; i--) {
     		if (bases[i]) {
     			if (i + n >= bases.length) {
@@ -55,6 +56,7 @@ public class Inning
     				pitcher.incrementPitch(5);
     				bases[i] = false;
     				score++;
+    			} else if(i == 0 && !b) {
     			}
     			else {
     				boolean temp = bases[i];
@@ -236,7 +238,9 @@ public class Inning
 	            		}
 	            		else {
 	            			response = team1.getName(order) + " has flied out. ";
-	            			response += baseRunner(0, false);
+	            			if(bases[1]) {
+	            				response += baseRunner(1, false);
+	            			} else response += baseRunner(0, false);
 	            		}
 	            	}
 	            	else {
@@ -247,7 +251,13 @@ public class Inning
 	            }
 	            else if (temp.equals("Groundout"))
 	            {
-	                response = team1.getName(order) + " grounds out. ";
+	            	if(bases[0] && outs < 2) {
+	            		bases[0] = false;
+	            		outs++;
+	            		response = team1.getName(order) + " grounds into a double play. ";
+	            	} else {
+	            		response = team1.getName(order) + " grounds out. ";
+	            	}
 	                pitcher.incrementPitch(10);
 	                if (outs < 2) {
 	                	response += baseRunner(1, false);
@@ -257,7 +267,15 @@ public class Inning
 	            else if (temp.equals("Walk")) {
 	            	response = team1.getName(order) + " has walked. ";
 	                pitcher.incrementPitch(8);
-	                response += baseRunner(1, true);
+	                if (bases[0] && !bases[1] && bases[2]) {
+	                	bases[0] = true;
+	                	bases[1] = true;
+	                	response += baseRunner(0, false);
+	                } else if (!bases[0]) {
+	                	response += baseRunner(0, true);
+	                } else {
+	                	response += baseRunner(1, true);
+	                }
 	            }
 	    		response += outs + " out.";
 	    		order = (order + 1) % team1.returnLineup();
@@ -289,5 +307,9 @@ public class Inning
         {
             team2.replacePitcherPrompt();
         }
+    }
+    
+    public int getOuts() {
+    	return outs;
     }
 }

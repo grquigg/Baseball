@@ -25,6 +25,7 @@ public class Plays
      */
     public Plays(Player p)
     {
+//    	rn.setSeed(5);
         player = p;
     }
     public void newAction()

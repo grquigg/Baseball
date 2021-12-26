@@ -76,9 +76,11 @@ public class Game extends JPanel {
 			String [] data = row.split(",");
 			fileData.add(data);
 		}
-		if(fileData.size() == 0) {
+		if(fileData.size() <= 1) {
 			System.out.println("File empty");
 		} else {
+			System.out.println("File not empty");
+			System.out.println(fileData.size());
 			processFileData();
 		}
 //		System.out.println("Create writer");
@@ -88,6 +90,7 @@ public class Game extends JPanel {
 
 	private void processFileData() {
 		System.out.println(fileData.size());
+		System.out.println(fileData.get(0)[0]);
 		int numTeams = Integer.parseInt(fileData.get(0)[1]);
 		for (int i = 0; i < numTeams; i++) {
 			Team team = new Team(fileData.get(i+1)[0]);
@@ -98,6 +101,7 @@ public class Game extends JPanel {
 		for (int j = 0; j < numTeams; j++) {
 			System.out.println("New team");
 			System.out.println(cursor);
+			System.out.println(fileData.get(cursor)[0]);
 			int numPlayers = Integer.parseInt(fileData.get(cursor)[1]);
 			System.out.println(numPlayers);
 			cursor++;
@@ -117,6 +121,7 @@ public class Game extends JPanel {
 				}
 				p.calculateAvg();
 				cursor++;
+				System.out.println(teamList.get(j).getTeamName());
 				teamList.get(j).addPlayer(p);
 			}
 			System.out.println(cursor);
@@ -131,7 +136,7 @@ public class Game extends JPanel {
 					System.out.println("Player already in list");
 					Pitcher temp = teamList.get(j).findPitcher(name);
 					for (int c = 0; c < 11; c++) {
-						int t = Integer.parseInt(fileData.get(cursor)[c+2]);
+						int t = Integer.parseInt(fileData.get(cursor)[c+1]);
 						temp.setPitchStat(c, t);
 						temp.getEra();
 						temp.getIP();
@@ -140,7 +145,8 @@ public class Game extends JPanel {
 				} else {
 					Pitcher p = new Pitcher(name, "Pitcher");
 					for (int c = 0; c < 11; c++) {
-						int t = Integer.parseInt(fileData.get(cursor)[c+2]);
+						System.out.println(Integer.parseInt(fileData.get(cursor)[c]));
+						int t = Integer.parseInt(fileData.get(cursor)[c+1]);
 						p.setPitchStat(c, t);
 						p.getEra();
 						p.getIP();
@@ -150,7 +156,7 @@ public class Game extends JPanel {
 				}
 				cursor++;
 			}
-			cursor+=2;
+			cursor+=1;
 		}
 		
 		
@@ -234,19 +240,40 @@ public class Game extends JPanel {
 	
 	public void switchToGameMenuState() {
 		state = GameState.GameMenu;
+		//code to handle the players
+		updateGameStats();
 		onUpdate();
 	}
 	
+	public void updateGameStats() {
+		for (Player p: teamA.lineup) {
+			System.out.println(p.getName());
+			p.setStat(0, p.getStat(0)+1);
+		}
+		Pitcher a = teamA.getStartingPitcher();
+		teamA.getStartingPitcher().setPitchStat(0, a.getPitchStat(0)+1);
+		teamA.getStartingPitcher().setPitchStat(1, a.getPitchStat(1)+1);
+		
+		for (Player p: teamB.lineup) {
+			System.out.println(p.getName());
+			p.setStat(0, p.getStat(0)+1);
+		}
+		Pitcher b = teamB.getStartingPitcher();
+		teamB.getStartingPitcher().setPitchStat(0, b.getPitchStat(0)+1);
+		teamB.getStartingPitcher().setPitchStat(1, b.getPitchStat(1)+1);
+	}
 	public static void main(String[] args) {
 		Game g = new Game("Title");
 	}
 
 	public void WriteToFile() {
+		//It overwrites stuff from the file for some reason?
 //		System.out.println("Write to file");
 //		System.out.println(teamA.getPlayer(0));
 //		System.out.println(teamB.getPlayer(0));
 		String teams = "Teams," + Integer.toString(teamList.size());
 		try {
+			csvWriter = new FileWriter(fileName);
 			writeLineToFile(teams);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -268,21 +295,22 @@ public class Game extends JPanel {
 				String temp = "Players," + Integer.toString(t.returnRoster());
 				writeLineToFile(temp);
 				for(int i = 0; i < t.returnRoster(); i++) {
-					Player p = t.getPlayer(i);
+					Player p = (Player) t.getPlayer(i);
+					System.out.println("Player");
 					p.displayStats();
-					String player = p.getName() + "," + p.getPosition() + "," + p.toString() + p.getAvg();
+					String player = p.getName() + "," + p.getPosition() + "," + p.toPlayerString() + p.getAvg();
+					System.out.println(player);
 					writeLineToFile(player);
 				}
 				String pitcher = "Pitchers," + Integer.toString(t.returnNumberOfPitchers());
 				writeLineToFile(pitcher);
-				writeLineToFile("");
 				System.out.println(t.returnNumberOfPitchers());
 				for(int j = 0; j < t.returnNumberOfPitchers(); j++) {
-					Pitcher p = t.getPitcher(0);
+					Pitcher p = t.getPitcher(j);
 					System.out.println(p.toString());
+					writeLineToFile(p.getName() + "," + p.toString());
 				}
 			}
-			csvWriter.flush();
 			csvWriter.close();
 			System.out.println("Successfully wrote to file");
 		} catch (IOException e) {
